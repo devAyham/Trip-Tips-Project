@@ -1,0 +1,33 @@
+@use '../../shared/colors&fonts' as *;
+
+.model-verify{
+    background-color: $dark_blue !important ;
+    color: $white;
+    .server-error{
+        padding: 8px; 
+    }
+    .hmaro{
+        margin-top: -30px; 
+    }
+    .trip-logo{
+        // margin-left: 50px;
+        width: 40%;
+    }
+    .and{
+        display: inline;
+        font-size: 50px;
+        font-family: $title_font;
+    }
+    .shild-logo{
+        margin-left: 50px;
+        width: 40%; 
+        font-size: 700%;
+        color: $white;
+    } 
+    .desc{
+        font-size: 18px;
+    }
+    u{
+        font-size: 18px; 
+    }
+}  

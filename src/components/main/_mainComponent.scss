@@ -1,0 +1,25 @@
+@use '../../shared/colors&fonts' as *;
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    &::-webkit-scrollbar{
+        width: 0.5vw;
+        height: 0; 
+    };
+    &::-webkit-scrollbar-thumb{
+        background-color: $yellow;
+        border-radius: 5px; 
+    };
+    &::-webkit-scrollbar-track{
+        background-color: $dark_blue;
+    };
+    &::selection{   
+        background-color: $yellow !important ;
+        color: $dark_blue !important ; 
+    };
+};
+body{
+    background-color:$white !important;
+    // height: 1000px; 
+};      

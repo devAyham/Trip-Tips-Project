@@ -3,11 +3,20 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.min.js'
+import '@fortawesome/free-solid-svg-icons'
+import '@fortawesome/free-regular-svg-icons'
+import '@fortawesome/free-brands-svg-icons';
+import { AuthProvider } from './context/AuthProvider';
+import 'react-calendar/dist/Calendar.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <AuthProvider>
+      <App />
+    </AuthProvider>
   </React.StrictMode>
 );
 

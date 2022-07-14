@@ -1,0 +1,33 @@
+.reCAPTCHA-box{
+    margin-top: 20px; 
+    display: flex;
+    position: relative; 
+    justify-content: space-between;
+    align-items: center; 
+    width: 85%;
+    height: 100px;
+    border: solid 2px #b2b2b2;
+    border-radius: 10px;
+    padding: 20px;
+    margin-left: 20% ;
+    background-color: rgb(241, 241, 241);
+    .re-check{
+        cursor: pointer;
+    }
+    label{
+        font-weight: bold;
+    }
+    .reCAPTCHA-logo-box{
+        margin-top: 20px; 
+        p{
+            color: #b2b2b2;
+            font-size: 16px; 
+            font-weight: 500;
+        }
+        .reCAPTCHA-logo{
+            // left: 40%;
+            width: fit-content;
+            height: 60px; 
+        }
+    }
+}

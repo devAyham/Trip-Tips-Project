@@ -1,0 +1,225 @@
+@use '../../../shared/colors&fonts' as *;
+
+.sginin-container{
+    position: relative;
+    width: 100vw; 
+    height: 100vh;
+    // left: 78px;   
+    .sign-up{
+        height: 100vh; 
+        .verify-icon{
+            width: 30%; 
+            border: none; 
+            border-radius: 50px; 
+            padding: 8px;
+            font-size: 20px;
+            font-family: $normal_font;
+            background-color: $dark_blue;
+            color: $white;
+            transition: all 0.1s;
+        }
+    }
+    .sign-up-fildes-box{
+        min-height: 100vh; 
+        background-color: white;
+        .server-errors{
+            margin-top: 20px;
+            margin-bottom: -20px;
+        }
+        small{
+            width: 100%;
+            padding-left: 60px;  
+        }   
+        .filed{
+            margin-top: 20px;
+            background-color: $white ;
+            border:none; 
+            border-bottom: solid 3px $gray;
+            border-radius: 0px; 
+            transition: all 0.5s;  
+            &:focus{
+                box-shadow: none; 
+                border-bottom-color: $dark_blue;
+            }
+            &.invalid{
+                box-shadow: none; 
+                border-bottom-color: rgb(170, 0, 0);
+            }
+        }
+        .tel{
+            width: 40%; 
+        }
+        .country{
+            color: gray; 
+            font-size: 50px; 
+        }
+        .filed-icon{
+            margin-top: 20px;
+            background-color: $white ;
+            border:none; 
+            border-radius: 0px; 
+            transition: all 0.5s;
+            color: $dark_blue; 
+            &:hover { 
+                box-shadow: none; 
+                border-bottom-color: $dark_blue;
+                color: $dark_blue;
+            } 
+        }
+        .forgotpass{ 
+            font-family: $normal_font;
+            font-weight: bold;
+            color: $ink_blue;
+            &:hover{
+                color: $dark_blue;
+            }
+        }
+        .div-icon{
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            width: 100%;    
+            .one-icon{
+                width: 30%; 
+                border: none; 
+                border-radius: 50px; 
+                padding: 8px;
+                font-size: 20px;
+                font-family: $normal_font;
+                background-color: $dark_blue;
+                color: $white;
+                text-transform: uppercase; 
+                transition: all 0.1s;
+                &[disabled]{
+                background-color: $gray !important;
+                }
+            }
+        }
+        .title{
+            font-family: $title_font;
+            color: $dark_blue;
+            font-size: 55px; 
+            margin-top: 5px;
+        };
+        .sub-title{
+            font-family: $normal_font;
+            color: $gray;
+            font-weight: bold; 
+            text-align: center;
+        };
+        .or-box-bottom-container{
+            .or-box{
+                display: flex;
+                flex-wrap: nowrap;
+                justify-content: center;
+                align-items: center;
+                height: 30px;
+                .or{
+                    color: $dark_blue;
+                }
+                .line{
+                    width:30% ; 
+                    height: 2px ;
+                    background-color: $yellow;
+                    margin: 5px;
+                };
+            }
+            .div-soc-icon{
+                display: flex;
+                justify-content: center;
+                flex-wrap: nowrap;
+                .socail-icon{
+                    color: $dark_blue;
+                    margin: 10px;
+                    text-decoration: none;
+                    font-size: 40px;
+                }
+            }
+        }
+        .or-box-side-container{
+            .or-box{
+                height: 70%;
+                margin-left: -40px; 
+                .or{
+                    color: $dark_blue;
+                }
+                .line{
+                    height:40% ; 
+                    width: 2px ;
+                    background-color: $yellow;
+                    margin: 5px;
+                };
+            }
+            .div-soc-icon{
+                display: flex;
+                flex-direction: column; 
+                justify-content: center;
+                align-content: center;
+                flex-wrap: wrap;
+                .socail-icon{
+                    display: block;
+                    color: $dark_blue;
+                    margin: 10px;
+                    text-decoration: none;
+                    font-size: 60px;
+                }
+            }
+        }
+    }
+    .sign-up-img-box{ 
+        position: relative; 
+        height:100%;
+        .img-box{ 
+            position: absolute;   
+            background-size: cover; 
+            background-image: url('../public/imges/lightnight.png') ; 
+            width: 100%;
+            height: 100%; 
+            filter: blur(4px);
+            z-index: 0; 
+        }
+        
+        .myoverlay{
+            position: absolute;    
+            width: 100%;
+            height: 100vh;
+            background-color: rgb( 0 0 0 / 30%);
+            z-index: 1;
+            .text-boxx{
+                margin-top: 50px;
+                .trip-logo{
+                    max-width: 250px; 
+                    max-height: 250px;
+                    opacity: 0.99;
+                } 
+                .title{
+                    color: $white;
+                    font-family: $title_font; 
+                    margin-top: -30px;
+                    font-size: 50px;
+                    }; 
+                .description{
+                    font-weight: bold; 
+                    font-size: 18px;  
+                    margin-top: -5px;  
+                    color: $white; 
+                    font-family: $normal_font; 
+                }
+                .dont{
+                    font-size: 18px;  
+                    color: $white; 
+                    font-family: $normal_font; 
+                    margin-top: 30% !important; 
+                    // margin-bottom: 28% !important; 
+                }
+                .create-acount{
+                    color: $gray;
+
+                    &:hover{
+                        color: $yellow ;
+                    }
+                }
+            };
+        };
+    };
+}  

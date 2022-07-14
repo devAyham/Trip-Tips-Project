@@ -1,0 +1,19 @@
+.dashborad-requests{
+    margin-top: 30px;
+    margin-left: 90px !important;
+    .breadcrumb-item{
+        font-size: 25px;
+    }
+    .nav-link.active{
+        color: black !important;
+        border-color: #000000 #000000 #000 !important;
+    }
+    .nav-link{
+        color: gray !important;
+    }
+    .img-model{
+        cursor: pointer;
+        
+    }
+
+}

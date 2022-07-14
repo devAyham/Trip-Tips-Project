@@ -1,0 +1,16 @@
+@use  "./src/components/main/_mainComponent";
+@use  "./src/components/logging/_loggingComponent";
+@use  "./src/components/logging/signin/_signinComponent";
+@use  "./src/components/logging/signup/_signupComponent";
+@use  "./src/components/dashboard/_dashboardComponent";
+@use  "./src/components/dashboard/users/_usersComponent";
+@use  "./src/components/dashboard/packages/_packagesComponent";
+@use  "./src/components/dashboard/addpackage/_addpackageComponent";
+@use  "./src/components/dashboard/requests/_requestsComponent";
+@use  "./src/components/reCAPTCHA/_reCAPTCHAComponent";
+@use  "./src/components/VerifyEmail/_verifyemailComponent";
+@use  "./src/components/forgotpassword/_forgotPasswordComponent";
+@use  "./src/components/home/_homeComponent";
+@use  "./src/components/addplace/_addplaceComponent";
+
+@use  "./src/components/navbar/_navbarComponent";
