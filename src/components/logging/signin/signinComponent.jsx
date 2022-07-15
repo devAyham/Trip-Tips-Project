@@ -57,10 +57,11 @@ let Signin = ({user,setUser}) => {
               }
           );
           console.log(response.data);
+          const aid = response?.data?.user.id;
           const aname = response?.data?.user.name;
           const aemail = response?.data?.user.email;
-          const arole = response?.data?.user.role.id;
-          const arolename = response?.data?.user.role.role_name;
+          const arole = response?.data?.user?.role?.role_person_id;
+          const arolename = response?.data?.user?.role?.role_person_name;
           const atoken = response?.data?.token;
           const aphone = response?.data?.user.phone;
           const aimg = response?.data?.user.img;
@@ -68,8 +69,8 @@ let Signin = ({user,setUser}) => {
           const ablocked = response?.data?.user.is_active;
           const ais_registerd = response?.data?.user.is_registered;
           const ais_verifay = response?.data?.user.is_verifaied;
-          setAuth({ aname,aemail, arole,arolename, atoken,aphone,aimg,alevel,ais_verifay,ablocked,ais_registerd});
-          console.log(aname,aemail, arole,arolename, atoken,aphone,aimg,alevel,ais_verifay,ablocked,ais_registerd);
+          setAuth({ aid, aname,aemail, arole,arolename, atoken,aphone,aimg,alevel,ais_verifay,ablocked,ais_registerd});
+          console.log(aid, aname,aemail, arole,arolename, atoken,aphone,aimg,alevel,ais_verifay,ablocked,ais_registerd);
           setIsLooading(false);
           if(ais_registerd === 0){
             setErrMsg(`Hi plase Set A new Password to your acount so you can log in normaly in future `);
@@ -122,8 +123,8 @@ let Signin = ({user,setUser}) => {
         console.log(response.data);
         const aname = response?.data?.user.name;
         const aemail = response?.data?.user.email;
-        const arole = response?.data?.user?.role?.id;
-        const arolename = response?.data?.user?.role?.role_name;
+        const arole = response?.data?.user?.role_person_id;
+        const arolename = response?.data?.user?.role_person_name;
         const atoken = response?.data?.token;
         const aphone = response?.data?.user.phone;
         const aimg = response?.data?.user.img;

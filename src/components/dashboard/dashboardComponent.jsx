@@ -13,10 +13,12 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useEffect, useState } from "react";
 import Calendar from "react-calendar";
+import {useNavigate} from 'react-router-dom'
 import { Bar, Doughnut } from "react-chartjs-2";
 import { NavLink } from "react-router-dom";
 import { baseURl } from "../../api/baseURL";
 import AuthContext from "../../context/AuthProvider";
+import { useAxiosGet } from "../../hooks/useAxiosFetch";
 import BarChart from "../charts/barchart/barChart";
 import LineChart from "../charts/linerchart/linerChart";
 import PieChart from "../charts/piechart/pieChart";
@@ -35,7 +37,17 @@ let Clock = () => {
 
 let Dashboard = () => {
   const { auth, setAuth } = useContext(AuthContext);
-
+  const [flag , setflag] = useState(false); 
+  const [allAdmins , setallAdmins] =useState([])
+  const navigate = useNavigate();
+  let {
+    data: admins,
+    fetchError: allADminsErrors,
+    isLoading: allAdminsIsLoading,
+  } = useAxiosGet("/api/user/getAdmins", flag);
+  useEffect(()=>{
+    setallAdmins(admins.users)
+  },[admins])
   const UserData = {
     Visitors: [
       {
@@ -229,7 +241,6 @@ let Dashboard = () => {
       },
     ],
   });
-
   const PlacesData = [
     {
       id: 1,
@@ -257,7 +268,6 @@ let Dashboard = () => {
       Count: 25,
     },
   ];
-
   const [placesData, setplacesData] = useState({
     labels: PlacesData.map((data) => data.type),
     datasets: [
@@ -294,7 +304,6 @@ let Dashboard = () => {
       },
     ],
   });
-
   const TrendsData = {
     top1: [
       {
@@ -460,7 +469,7 @@ let Dashboard = () => {
         <div className="row dash-options ms-sm-3 mt-3 ">
           <div className="col-12 mt-5 mb-3 d-sm-none"></div>
           <NavLink
-            to={'/dashboard/users'}
+            to={"/dashboard/users"}
             className=" col-10 col-sm-4 col-md-3 col-lg-2 col-xl-1  card-option  position-relative "
             onClick={activeIconToggle}
           >
@@ -475,7 +484,7 @@ let Dashboard = () => {
             <FontAwesomeIcon className={"icon-option"} icon={faUser} />
           </NavLink>
           <NavLink
-            to={'/dashboard/packages'}
+            to={"/dashboard/packages"}
             className="col-10 col-sm-4 col-md-3 col-lg-2 col-xl-1 card-option position-relative "
             onClick={activeIconToggle}
           >
@@ -493,7 +502,7 @@ let Dashboard = () => {
             />
           </NavLink>
           <NavLink
-            to={'/dashboard/visitors'}
+            to={"/dashboard/visitors"}
             className="col-10 col-sm-4 col-md-3 col-lg-2 col-xl-1 card-option position-relative "
             onClick={activeIconToggle}
           >
@@ -508,7 +517,7 @@ let Dashboard = () => {
             <FontAwesomeIcon className={"icon-option"} icon={faGlobe} />
           </NavLink>
           <NavLink
-            to={'/dashboard/requests'}
+            to={"/dashboard/requests"}
             className="col-10 col-sm-4 col-md-3 col-lg-2 col-xl-1 card-option position-relative "
             onClick={activeIconToggle}
           >
@@ -528,7 +537,7 @@ let Dashboard = () => {
             </div>
           </NavLink>
           <NavLink
-            to={'/dashboard/contracts'}
+            to={"/dashboard/contracts"}
             className="col-10 col-sm-4 col-md-3 col-lg-2 col-xl-1 card-option position-relative "
             onClick={activeIconToggle}
           >
@@ -543,7 +552,7 @@ let Dashboard = () => {
             <FontAwesomeIcon className={"icon-option"} icon={faFileInvoice} />
           </NavLink>
           <NavLink
-            to={'/dashboard/earnings'}
+            to={"/dashboard/earnings"}
             className="col-10 col-sm-4 col-md-3 col-lg-2 col-xl-1 card-option position-relative "
             onClick={activeIconToggle}
           >
@@ -578,18 +587,18 @@ let Dashboard = () => {
                   />
                 </div>
               </div>
-                <div className="col-11 offset-1 d-none d-xl-block ">
-                  <div className="row">
-                    <div className=" col-12 col-md-12  mt-3 linerChart1 chart-box">
-                      <div className={"title"}>
-                        Users, Visitors & Downloads Daily Stats{" "}
-                      </div>
-                      <div className={"polar-area"}>
-                        <LineChart chartData={userData} />
-                      </div>
+              <div className="col-11 offset-1 d-none d-xl-block ">
+                <div className="row">
+                  <div className=" col-12 col-md-12  mt-3 linerChart1 chart-box">
+                    <div className={"title"}>
+                      Users, Visitors & Downloads Daily Stats{" "}
+                    </div>
+                    <div className={"polar-area"}>
+                      <LineChart chartData={userData} />
                     </div>
                   </div>
                 </div>
+              </div>
             </div>
           </div>
           {/* ========================================================================== */}
@@ -616,66 +625,45 @@ let Dashboard = () => {
                     alt="worng"
                   />
                 </div>
-                <div className="ur-name">Ayham Hammami</div>
+                <div className="ur-name">{auth.aname}</div>
               </div>
               <div className="hhr col-10"></div>
               <div className="col-12 other-admins">
                 <div className="img-list">
+                  {allAdmins?.map((admin, i) => {
+                    if (i >= 6) {
+                      return <></>;
+                    }
+                    if (admin.email === auth.aemail){
+                      return <></>;
+                    }
+                      return (
+                        <>
+                          <div
+                            className="admins-img bg-primary"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="buttom"
+                            data-bs-custom-class="custom-tooltip"
+                            title={admin.name}
+                          >
+                            <img
+                              className={"img-fluid "}
+                              src={baseURl + admin.img}
+                              alt="worng"
+                              onClick={()=>{navigate('./users')}}
+                            />
+                          </div>
+                        </>
+                      );
+                  })}
                   <div
-                    className="admins-img bg-primary"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="buttom"
-                    data-bs-custom-class="custom-tooltip"
-                    title="Amgad AlWattar"
+                    className={`admins-img other-admins-plus ${
+                      (!allAdmins  || allAdmins?.length - 6 <= 0) && "d-none"
+                    }`}
+                    onClick={()=>{navigate('./users')}}
                   >
-                    <img className={'img-fluid '} src={`${baseURl}${auth.aimg}`}  alt='worng'/>
+                    +{allAdmins?.length - 6}
                   </div>
-                  <div
-                    className="admins-img  bg-success"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="buttom"
-                    data-bs-custom-class="custom-tooltip"
-                    title="Aseel Dibi "
-                  >
-                    <img className={'img-fluid'} src={`${baseURl}${auth.aimg}`}  alt='worng'/>
-                  </div>
-                  <div
-                    className="admins-img bg-secondary"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="buttom"
-                    data-bs-custom-class="custom-tooltip"
-                    title="yasin "
-                  >
-                    <img className={'img-fluid '} src={`${baseURl}${auth.aimg}`}  alt='worng'/>
-                  </div>
-                  <div
-                    className="admins-img bg-danger"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="buttom"
-                    data-bs-custom-class="custom-tooltip"
-                    title="Jasmin "
-                  >
-                    {/* <img className={'img-fluid '} src={`${baseURl}${auth.aimg}`}  alt='worng'/> */}
-                  </div>
-                  <div
-                    className="admins-img bg-warning"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="buttom"
-                    data-bs-custom-class="custom-tooltip"
-                    title="Salim Sahlab"
-                  >
-                    {/* <img className={'img-fluid '} src={`${baseURl}${auth.aimg}`}  alt='worng'/> */}
-                  </div>
-                  <div
-                    className="admins-img bg-info"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="buttom"
-                    data-bs-custom-class="custom-tooltip"
-                    title="Amgad AlWattar"
-                  >
-                    {/* <img className={'img-fluid '} src={`${baseURl}${auth.aimg}`}  alt='worng'/> */}
-                  </div>
-                  <div className="admins-img other-admins-plus">+12</div>
                 </div>
               </div>
             </div>

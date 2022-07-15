@@ -60,17 +60,19 @@ let Signup = () => {
           }
         );
         console.log(response.data);
-        const aname = response?.data?.user.name;
-        const aemail = response?.data?.user.email;
-        const arole = response?.data?.user.role.id;
-        const arolename = response?.data?.user.role.role_name;
+        const aid = response?.data?.user?.id;
+        const aname = response?.data?.user?.name;
+        const aemail = response?.data?.user?.email;
+        const arole = response?.data?.user?.role_person_id;
+        const arolename = response?.data?.user?.role_peson_name;
         const atoken = response?.data?.token;
-        const aphone = response?.data?.user.phone;
-        const aimg = response?.data?.user.img;
-        const alevel = response?.data?.user.level;
-        const ablocked = response?.data?.user.is_active;
-        const ais_registerd = response?.data?.user.is_registered;
-        const ais_verifay = response?.data?.user.is_verifaied;
+        const aphone = response?.data?.user?.phone;
+        const aimg = response?.data?.user?.img;
+        const alevel = response?.data?.user?.level;
+        const ablocked = response?.data?.user?.is_active;
+        const ais_registerd = response?.data?.user?.is_registered;
+        const ais_verifay = response?.data?.user?.is_verifaied;
+        const ahave_places = response?.data?.user?.is_verifaied;
         setAuth({
           aname,
           aemail,
