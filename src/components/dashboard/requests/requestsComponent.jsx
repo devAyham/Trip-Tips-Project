@@ -8,6 +8,8 @@ import AuthContext from "../../../context/AuthProvider";
 import axios from "../../../api/axios";
 import { useAxiosPost } from "../../../hooks/useAxiosFetch";
 import { baseURl } from "../../../api/baseURL";
+import { faMountain, faRefresh } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 let Resturants = ({ allresturants, flag, setflag, isinloading }) => {
   const { auth, setAuth } = useContext(AuthContext);
@@ -1094,6 +1096,12 @@ let Requests = () => {
             <li className="breadcrumb-item active" aria-current="page">
               Requests
             </li>
+          <FontAwesomeIcon className={'btn ms-auto fs-1'} icon={faRefresh} onClick={()=>{
+            setrestflag(!restflag);
+            sethotflag(!hotflag);
+            setairflag(!airflag);
+            setplaceflag(!placeflag);
+          }}/>
           </ol>
         </nav>
         <ul className="nav nav-tabs ">
