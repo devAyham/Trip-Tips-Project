@@ -628,7 +628,7 @@ let Dashboard = () => {
                     data-bs-custom-class="custom-tooltip"
                     title="Amgad AlWattar"
                   >
-                    {/* <img className={'img-fluid '} src={`${baseURl}${auth.aimg}`}  alt='worng'/> */}
+                    <img className={'img-fluid '} src={`${baseURl}${auth.aimg}`}  alt='worng'/>
                   </div>
                   <div
                     className="admins-img  bg-success"
@@ -637,7 +637,7 @@ let Dashboard = () => {
                     data-bs-custom-class="custom-tooltip"
                     title="Aseel Dibi "
                   >
-                    {/* <img className={'img-fluid'} src={`${baseURl}${auth.aimg}`}  alt='worng'/> */}
+                    <img className={'img-fluid'} src={`${baseURl}${auth.aimg}`}  alt='worng'/>
                   </div>
                   <div
                     className="admins-img bg-secondary"
@@ -646,7 +646,7 @@ let Dashboard = () => {
                     data-bs-custom-class="custom-tooltip"
                     title="yasin "
                   >
-                    {/* <img className={'img-fluid '} src={`${baseURl}${auth.aimg}`}  alt='worng'/> */}
+                    <img className={'img-fluid '} src={`${baseURl}${auth.aimg}`}  alt='worng'/>
                   </div>
                   <div
                     className="admins-img bg-danger"
@@ -675,9 +675,6 @@ let Dashboard = () => {
                   >
                     {/* <img className={'img-fluid '} src={`${baseURl}${auth.aimg}`}  alt='worng'/> */}
                   </div>
-                  {/* <img className={'img-fluid '} src={`${baseURl}${auth.aimg}`}  alt='worng'/> */}
-                  {/* <img className={'img-fluid '} src={`${baseURl}${auth.aimg}`}  alt='worng'/> */}
-                  {/* <img className={'img-fluid '} src={`${baseURl}${auth.aimg}`}  alt='worng'/> */}
                   <div className="admins-img other-admins-plus">+12</div>
                 </div>
               </div>

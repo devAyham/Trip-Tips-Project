@@ -1,19 +1,80 @@
-.dashborad-requests{
-    margin-top: 30px;
-    margin-left: 90px !important;
-    .breadcrumb-item{
-        font-size: 25px;
-    }
-    .nav-link.active{
-        color: black !important;
-        border-color: #000000 #000000 #000 !important;
-    }
-    .nav-link{
-        color: gray !important;
-    }
-    .img-model{
-        cursor: pointer;
-        
-    }
+@use "../../../shared/colors&fonts" as *;
 
+.dashborad-requests { 
+  margin-top: 30px;
+  margin-left: 90px !important;
+  .breadcrumb-item {
+    font-size: 25px;
+  }
+  .nav-link.active {
+    color: black !important;
+    border-color: #000000 #000000 #000 !important;
+  }
+  .nav-link {
+    color: gray !important;
+  }
+  .img-list {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    margin-left: 10px;
+    margin-bottom: 7px;
+    .place-img {
+      width: 40px;
+      height: 40px;
+      border: solid 1px black;
+      border-radius: 50% !important;
+      transition: all 200ms;
+      cursor: pointer;
+      img {
+        border-radius: 50px !important;
+        width: 100%;
+        height: 100%;
+      }
+      &:not(:first-child) {
+        margin-left: -20px;
+      }
+      &:hover:not(:last-child) {
+        transform: translateY(-10px);
+      }
+      &:hover ~ .place-img:not(:last-child) {
+        transform: translatex(15px);
+      }
+    }
+    .other-imgs-plus {
+      color: white;
+      background-color: rgba(0, 0, 0, 0.563);
+      text-align: center;
+      font-size: 16px;
+      padding: 5px;
+    }
+  }
+  .img-model {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 1px solid black;
+    margin: auto;
+    overflow: hidden;
+    transition: all 200ms;
+    &:hover{
+        transform: translateY(-5px);
+    }
+    img {
+      // object-fit: cover;
+      // object-position: center;
+      width: 100%;
+      height: 100%;
+    }
+  }
+  // }
+  .ownerShipImageInModal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 100%;
+    }
+  }
 }

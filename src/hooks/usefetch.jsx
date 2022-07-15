@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
-import { baseURl } from './baseURL';
+import { useState, useEffect, useContext } from 'react';
+import AuthContext from '../context/AuthProvider';
+import { baseURl } from '../api/baseURL';
 
 const useGetFetch = (url) => {
     const [data, setData] = useState(null);
@@ -31,19 +32,21 @@ const useGetFetch = (url) => {
     return { data, isPending, error };
 
 }
-const usePostFetch = (url , datas ,token ) => {
+const usePostFetch = (url , datas = null ,token ) => {
+    const { auth, setAuth } = useContext(AuthContext);
     const [data, setData] = useState(null);
     const [isPending, setIsPending] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        setTimeout(() => {
-        fetch(baseURl + url , {
+        // setTimeout(() => {
+        fetch(baseURl + '/api/Show_Not_Active_Resturants' , {
             method: "POST",
+            mode: 'no-cors',
             body: JSON.stringify(datas),
             headers: {
                 "Content-Type": "application/json",
-                'Authorization' : `Bearer ${token}`
+                Authorization: `Bearer ${auth.atoken}`,
             },
             credentials: "same-origin"
         })
@@ -63,7 +66,7 @@ const usePostFetch = (url , datas ,token ) => {
             setIsPending(false);
             setError(err.message);
         })
-        }, 1000);
+        // }, 1000);
     }, [url])
 
     return { data, isPending, error };

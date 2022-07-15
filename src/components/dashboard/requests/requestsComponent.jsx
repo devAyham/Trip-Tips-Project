@@ -1,276 +1,277 @@
 import { defaults } from "chart.js";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Popover } from "bootstrap";
 import { set } from "react-hook-form";
+import { usePostFetch } from "../../../hooks/usefetch";
+import AuthContext from "../../../context/AuthProvider";
+import axios from "../../../api/axios";
+import { useAxiosPost } from "../../../hooks/useAxiosFetch";
+import { baseURl } from "../../../api/baseURL";
 
-let Resturants = () => {
-  return (
-    <>
-      <div
-        class="modal fade"
-        id="ownerCr"
-        tabindex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">
-                Modal title
-              </h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <img src={"/logo/1.png"} alt={"..."} />
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* -========================================== */}
-      <div
-        class="modal fade"
-        id="exampleModal"
-        tabindex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">
-                Modal title
-              </h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <div
-                id="carouselExampleIndicators"
-                class="carousel carousel-dark slide"
-                data-bs-ride="true"
-              >
-                <div class="carousel-indicators">
-                  <button
-                    type="button"
-                    data-bs-target="#carouselExampleIndicators"
-                    data-bs-slide-to="0"
-                    class="active"
-                    aria-current="true"
-                    aria-label="Slide 1"
-                  ></button>
-                  <button
-                    type="button"
-                    data-bs-target="#carouselExampleIndicators"
-                    data-bs-slide-to="1"
-                    aria-label="Slide 2"
-                  ></button>
-                  <button
-                    type="button"
-                    data-bs-target="#carouselExampleIndicators"
-                    data-bs-slide-to="2"
-                    aria-label="Slide 3"
-                  ></button>
-                </div>
-                <div class="carousel-inner ">
-                  <div class="carousel-item active ">
-                    <img
-                      src="/imges/mountain.jfif"
-                      class="d-block w-100"
-                      alt="..."
-                    />
-                  </div>
-                  <div class="carousel-item">
-                    <img src="/logo/1.png" class="d-block w-100" alt="..." />
-                  </div>
-                  <div class="carousel-item">
-                    <img src="/logo/6.png" class="d-block w-100" alt="..." />
-                  </div>
-                </div>
-                <button
-                  class="carousel-control-prev"
-                  type="button"
-                  data-bs-target="#carouselExampleIndicators"
-                  data-bs-slide="prev"
-                >
-                  <span
-                    class="carousel-control-prev-icon"
-                    aria-hidden="true"
-                  ></span>
-                  <span class="visually-hidden">Previous</span>
-                </button>
-                <button
-                  class="carousel-control-next"
-                  type="button"
-                  data-bs-target="#carouselExampleIndicators"
-                  data-bs-slide="next"
-                >
-                  <span
-                    class="carousel-control-next-icon"
-                    aria-hidden="true"
-                  ></span>
-                  <span class="visually-hidden">Next</span>
-                </button>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <table className="table  text-center ">
-        <thead>
-          <tr className="table-dark ">
-            <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Location</th>
-            <th scope="col">Images</th>
-            <th scope="col">Category</th>
-            <th scope="col">Rate</th>
-            <th scope="col">Booking Price</th>
-            <th scope="col">Ownership Certificate</th>
-            <th scope="col">Support Email</th>
-            <th scope="col"> </th>
-            <th scope="col"> </th>
-          </tr>
-        </thead>
-        <tbody>
+let Resturants = ({ allresturants }) => {
+  const { auth, setAuth } = useContext(AuthContext);
+  const [errMsg, setErrMsg] = useState("");
+  const [isloading, setIsLooading] = useState(false);
+
+  const handleAccept = async (id) => {
+    const formData = new FormData();
+    formData.append("id", id);
+    setIsLooading(true);
+    setErrMsg("");
+    // if(done !==0){
+    try {
+      const response = await axios.post("/api/AcceptResturant", formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.atoken}`,
+        },
+        withCredentials: true,
+      });
+      console.log(response);
+    } catch (err) {
+      setIsLooading(false);
+      if (err?.message) {
+        setErrMsg(err.response.data.message);
+        console.log(err.response.data.message);
+      }
+    }
+  };
+  const handleReject = async (id) => {
+    const formData = new FormData();
+    formData.append("id", id);
+    setIsLooading(true);
+    setErrMsg("");
+    // if(done !==0){
+    try {
+      const response = await axios.post("/api/RefusResturant", formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.atoken}`,
+        },
+        withCredentials: true,
+      });
+      console.log(response);
+    } catch (err) {
+      setIsLooading(false);
+      if (err?.message) {
+        setErrMsg(err.response.data.message);
+        console.log(err.response.data.message);
+      }
+    }
+  };
+
+  let renderResturants;
+  let renderOwnerShipImage;
+  let renderResturantImage;
+  if (allresturants) {
+    renderResturants = allresturants.map((resturant) => {
+      return (
+        <>
           <tr className="table-warning  ">
-            <th scope="row ">1</th>
-            <td>Sweet</td>
-            <td>Al-tal h</td>
+            <th scope="row ">{resturant.id}</th>
+            <td>{resturant.name}</td>
+            <td>{resturant.location}</td>
             <td>
-              <img
-                type="button"
-                data-bs-toggle="modal"
-                data-bs-target="#exampleModal"
-                className={"img-model"}
-                width={"40px"}
-                height={"40px"}
-                src={"/logo/55.png"}
-                alt={".."}
-              />
-              <img
-                type="button"
-                data-bs-toggle="modal"
-                data-bs-target="#exampleModal"
-                className={"img-model"}
-                width={"40px"}
-                height={"40px"}
-                src={"/logo/55.png"}
-                alt={".."}
-              />
-              <img
-                type="button"
-                data-bs-toggle="modal"
-                data-bs-target="#exampleModal"
-                className={"img-model"}
-                width={"40px"}
-                height={"40px"}
-                src={"/logo/55.png"}
-                alt={".."}
-              />
-              <img
-                type="button"
-                data-bs-toggle="modal"
-                data-bs-target="#exampleModal"
-                className={"img-model"}
-                width={"40px"}
-                height={"40px"}
-                src={"/logo/55.png"}
-                alt={".."}
-              />
-              <img
-                type="button"
-                data-bs-toggle="modal"
-                data-bs-target="#exampleModal"
-                className={"img-model"}
-                width={"40px"}
-                height={"40px"}
-                src={"/logo/55.png"}
-                alt={".."}
-              />
-              <img
-                type="button"
-                data-bs-toggle="modal"
-                data-bs-target="#exampleModal"
-                className={"img-model"}
-                width={"40px"}
-                height={"40px"}
-                src={"/logo/55.png"}
-                alt={".."}
-              />
-              <img
-                type="button"
-                data-bs-toggle="modal"
-                data-bs-target="#exampleModal"
-                className={"img-model"}
-                width={"40px"}
-                height={"40px"}
-                src={"/logo/55.png"}
-                alt={".."}
-              />
+              <div className="img-list">
+                {resturant.images.map((img, i) => {
+                  if (i >= 3) {
+                    return <></>;
+                  }
+                  return (
+                    <div className="place-img" data-bs-placement="buttom">
+                      <img
+                        type="button"
+                        data-bs-toggle="modal"
+                        data-bs-target={`#restImages-${resturant.id}`}
+                        className={""}
+                        src={baseURl + img.img}
+                        alt={".."}
+                      />
+                    </div>
+                  );
+                })}
+                <div
+                  className={`place-img other-imgs-plus ${
+                    resturant.images.length - 3 <= 0 && "d-none"
+                  }`}
+                >
+                  +{resturant.images.length - 3}
+                </div>
+              </div>
             </td>
             <td>See Food</td>
-            <td>3 Stars</td>
-            <td>10$</td>
+            <td>{resturant.rate} Stars </td>
+            <td>{resturant.price_booking}</td>
             <td>
-              <img
-                type="button"
-                data-bs-toggle="modal"
-                data-bs-target="#ownerCr"
-                className={"img-model"}
-                width={"40px"}
-                src={"/logo/55.png"}
-                alt={".."}
-              />
+              <div className="img-model">
+                <img
+                  type="button"
+                  data-bs-toggle="modal"
+                  data-bs-target={`#ownerCr-${resturant.id}`}
+                  src={baseURl + resturant.img_title_deed}
+                  alt={".."}
+                />
+              </div>
             </td>
-            <td>ayham@gmail.com</td>
+            <td>{resturant.support_email}</td>
             <td>
-              <button type="button" class="btn btn-success ">
+              <button
+                type="button"
+                class="btn btn-success "
+                onClick={() => {
+                  handleAccept(resturant.id);
+                }}
+              >
                 Accept
               </button>
             </td>
             <td>
-              <button type="button" class="btn btn-danger ">
+              <button
+                type="button"
+                class="btn btn-danger "
+                onClick={() => {
+                  handleReject(resturant.id);
+                }}
+              >
                 Reject
               </button>
             </td>
-          </tr>{" "}
-        </tbody>
-      </table>
-    </>
-  );
-};
-let Hotels = () => {
+          </tr>
+        </>
+      );
+    });
+    renderOwnerShipImage = allresturants.map((resturant) => {
+      return (
+        <div
+          class="modal fade "
+          id={`ownerCr-${resturant.id}`}
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  OwnerShip Certificate
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body ownerShipImageInModal">
+                <img
+                  className={""}
+                  src={baseURl + resturant.img_title_deed}
+                  alt={"..."}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    });
+    renderResturantImage = allresturants.map((resturant) => {
+      return (
+        <div
+          class="modal fade"
+          id={`restImages-${resturant.id}`}
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  Images
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div
+                  id={`carouselExampleIndicators-${resturant.id}`}
+                  class="carousel carousel-dark slide"
+                  data-bs-ride="true"
+                >
+                  <div class="carousel-indicators">
+                    {resturant.images.map((img, i) => {
+                      return (
+                        <>
+                          <button
+                            type="button"
+                            data-bs-target={`#carouselExampleIndicators-${resturant.id}`}
+                            data-bs-slide-to={i}
+                            class="active"
+                            aria-current="true"
+                            aria-label={`Slide ${i + 1}`}
+                          ></button>
+                        </>
+                      );
+                    })}
+                  </div>
+                  <div class="carousel-inner ">
+                    {resturant.images.map((img, i) => {
+                      return (
+                        <div
+                          key={img.id}
+                          class={`carousel-item ${i === 0 && "active"} `}
+                        >
+                          <img
+                            src={baseURl + img.img}
+                            class="d-block w-100"
+                            alt="..."
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <button
+                    class="carousel-control-prev"
+                    type="button"
+                    data-bs-target={`#carouselExampleIndicators-${resturant.id}`}
+                    data-bs-slide="prev"
+                  >
+                    <span
+                      class="carousel-control-prev-icon"
+                      aria-hidden="true"
+                    ></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button
+                    class="carousel-control-next"
+                    type="button"
+                    data-bs-target={`#carouselExampleIndicators-${resturant.id}`}
+                    data-bs-slide="next"
+                  >
+                    <span
+                      class="carousel-control-next-icon"
+                      aria-hidden="true"
+                    ></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    });
+  }
   return (
     <>
+      {renderOwnerShipImage}
+      {renderResturantImage}
+      {/* -========================================== */}
       <table className="table  text-center ">
         <thead>
           <tr className="table-dark ">
@@ -279,92 +280,6 @@ let Hotels = () => {
             <th scope="col">Location</th>
             <th scope="col">Images</th>
             <th scope="col">Category</th>
-            <th scope="col">Rate</th>
-            <th scope="col">Booking price</th>
-            <th scope="col">Ownership Certificate</th>
-            <th scope="col">Support Email</th>
-            <th scope="col"> </th>
-            <th scope="col"> </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr className="table-info  text-center ">
-            <th scope="row d-flex align-items-center">1</th>
-            <td>merdian</td>
-            <td>damascus</td>
-            <td>
-              <img
-                className={"img-model"}
-                width={"40px"}
-                height={"40px"}
-                src={"/imges/mountain.jfif"}
-                alt={".."}
-              />
-              <img
-                className={"img-model"}
-                width={"40px"}
-                height={"40px"}
-                src={"/logo/55.png"}
-                alt={".."}
-              />
-              <img
-                className={"img-model"}
-                width={"40px"}
-                height={"40px"}
-                src={"/logo/55.png"}
-                alt={".."}
-              />
-              <img
-                className={"img-model"}
-                width={"40px"}
-                height={"40px"}
-                src={"/logo/55.png"}
-                alt={".."}
-              />
-            </td>
-            <td>Families</td>
-            <td>5 Stars</td>
-            <td>
-              Gold : 8999
-              <br /> Pronz : 8999
-              <br /> Silver : 8999
-            </td>
-            <td>
-              <img
-                className={"img-model"}
-                width={"40px"}
-                height={"40px"}
-                src={"/logo/55.png"}
-                alt={".."}
-              />
-            </td>
-            <td>joj@gmail.com</td>
-            <td>
-              <button type="button" class="btn btn-success ">
-                Accept
-              </button>
-            </td>
-            <td>
-              <button type="button" class="btn btn-danger">
-                Reject
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </>
-  );
-};
-
-let AirLines = () => {
-  return (
-    <>
-      <table className="table  text-center ">
-        <thead>
-          <tr className="table-dark ">
-            <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Location</th>
             <th scope="col">Rate</th>
             <th scope="col">Booking Price</th>
             <th scope="col">Ownership Certificate</th>
@@ -373,47 +288,523 @@ let AirLines = () => {
             <th scope="col"> </th>
           </tr>
         </thead>
-        <tbody>
-          <tr className="table-primary  text-center">
-            <th scope="row">1</th>
-            <td>StaySaveLines</td>
-            <td>Damascus</td>
-            <td>4 Stars</td>
-            <td>
-              Gold : 8999
-              <br /> Pronz : 8999
-              <br /> Silver : 8999
-            </td>
-            <td>
-              <img
-                className={"img-model"}
-                width={"40px"}
-                height={"40px"}
-                src={"/logo/55.png"}
-                alt={".."}
-              />
-            </td>
-            <td>Sty@g.cm</td>
-            <td>
-              <button type="button" class="btn btn-success ">
-                Accept
-              </button>
-            </td>
-            <td>
-              <button type="button" class="btn btn-danger ">
-                Reject
-              </button>
-            </td>
-          </tr>{" "}
-        </tbody>
+        <tbody>{allresturants ? renderResturants : <p>No Requests</p>}</tbody>
       </table>
     </>
   );
 };
+let Hotels = ({ allhotels }) => {
+  const { auth, setAuth } = useContext(AuthContext);
+  const [errMsg, setErrMsg] = useState("");
+  const [isloading, setIsLooading] = useState(false);
 
-let NatuarlPlaces = () => {
+  const handleAccept = async (id) => {
+    const formData = new FormData();
+    formData.append("id", id);
+    setIsLooading(true);
+    setErrMsg("");
+    // if(done !==0){
+    try {
+      const response = await axios.post("/api/AcceptHotel", formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.atoken}`,
+        },
+        withCredentials: true,
+      });
+      console.log(response);
+    } catch (err) {
+      setIsLooading(false);
+      if (err?.message) {
+        setErrMsg(err.response.data.message);
+        console.log(err.response.data.message);
+      }
+    }
+  };
+  const handleReject = async (id) => {
+    const formData = new FormData();
+    formData.append("id", id);
+    setIsLooading(true);
+    setErrMsg("");
+    // if(done !==0){
+    try {
+      const response = await axios.post("/api/RefusHotel", formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.atoken}`,
+        },
+        withCredentials: true,
+      });
+      console.log(response);
+    } catch (err) {
+      setIsLooading(false);
+      if (err?.message) {
+        setErrMsg(err.response.data.message);
+        console.log(err.response.data.message);
+      }
+    }
+  };
+
+  let renderHotels;
+  let renderOwnerShipImage;
+  let renderHoteltImage;
+  if (allhotels) {
+    renderHotels = allhotels.map((hotel) => {
+      return (
+        <>
+          <tr className="table-info  ">
+            <th scope="row ">{hotel.id}</th>
+            <td>{hotel.name}</td>
+            <td>{hotel.location}</td>
+            <td>
+              <div className="img-list">
+                {hotel.images.map((img, i) => {
+                  if (i >= 3) {
+                    return <></>;
+                  }
+                  return (
+                    <div className="place-img" data-bs-placement="buttom">
+                      <img
+                        type="button"
+                        data-bs-toggle="modal"
+                        data-bs-target={`#restImages-${hotel.id}`}
+                        className={""}
+                        src={baseURl + img.img}
+                        alt={".."}
+                      />
+                    </div>
+                  );
+                })}
+                <div
+                  className={`place-img other-imgs-plus ${
+                    hotel.images.length - 3 <= 0 && "d-none"
+                  }`}
+                >
+                  +{hotel.images.length - 3}
+                </div>
+              </div>
+            </td>
+            <td>See Food</td>
+            <td>{hotel.rate} Stars </td>
+            <td>
+              {hotel.classes.map((classs, i) => {
+                return (
+                  <>
+                    <u>
+                      {classs.class_name} : {classs.money} $
+                    </u>{" "}
+                    ({classs.number_of_people} people)
+                    <br />
+                  </>
+                );
+              })}
+            </td>
+            <td>
+              <div className="img-model">
+                <img
+                  type="button"
+                  data-bs-toggle="modal"
+                  data-bs-target={`#ownerCr-${hotel.id}`}
+                  src={baseURl + hotel.img_title_deed}
+                  alt={".."}
+                />
+              </div>
+            </td>
+            <td>{hotel.support_email}</td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-success "
+                onClick={() => {
+                  handleAccept(hotel.id);
+                }}
+              >
+                Accept
+              </button>
+            </td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-danger "
+                onClick={() => {
+                  handleReject(hotel.id);
+                }}
+              >
+                Reject
+              </button>
+            </td>
+          </tr>
+        </>
+      );
+    });
+    renderOwnerShipImage = allhotels.map((hotel) => {
+      return (
+        <div
+          class="modal fade "
+          id={`ownerCr-${hotel.id}`}
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  OwnerShip Certificate
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body ownerShipImageInModal">
+                <img
+                  className={""}
+                  src={baseURl + hotel.img_title_deed}
+                  alt={"..."}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    });
+    renderHoteltImage = allhotels.map((hotel) => {
+      return (
+        <div
+          class="modal fade"
+          id={`restImages-${hotel.id}`}
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  Images
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div
+                  id={`carouselExampleIndicators-${hotel.id}`}
+                  class="carousel carousel-dark slide"
+                  data-bs-ride="true"
+                >
+                  <div class="carousel-indicators">
+                    {hotel.images.map((img, i) => {
+                      return (
+                        <>
+                          <button
+                            type="button"
+                            data-bs-target={`#carouselExampleIndicators-${hotel.id}`}
+                            data-bs-slide-to={i}
+                            class="active"
+                            aria-current="true"
+                            aria-label={`Slide ${i + 1}`}
+                          ></button>
+                        </>
+                      );
+                    })}
+                  </div>
+                  <div class="carousel-inner ">
+                    {hotel.images.map((img, i) => {
+                      return (
+                        <div
+                          key={img.id}
+                          class={`carousel-item ${i === 0 && "active"} `}
+                        >
+                          <img
+                            src={baseURl + img.img}
+                            class="d-block w-100"
+                            alt="..."
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <button
+                    class="carousel-control-prev"
+                    type="button"
+                    data-bs-target={`#carouselExampleIndicators-${hotel.id}`}
+                    data-bs-slide="prev"
+                  >
+                    <span
+                      class="carousel-control-prev-icon"
+                      aria-hidden="true"
+                    ></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button
+                    class="carousel-control-next"
+                    type="button"
+                    data-bs-target={`#carouselExampleIndicators-${hotel.id}`}
+                    data-bs-slide="next"
+                  >
+                    <span
+                      class="carousel-control-next-icon"
+                      aria-hidden="true"
+                    ></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    });
+  }
   return (
     <>
+      {renderOwnerShipImage}
+      {renderHoteltImage}
+      {/* -========================================== */}
+      <table className="table  text-center ">
+        <thead>
+          <tr className="table-dark ">
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Location</th>
+            <th scope="col">Images</th>
+            <th scope="col">Category</th>
+            <th scope="col">Rate</th>
+            <th scope="col">Classes</th>
+            <th scope="col">Ownership Certificate</th>
+            <th scope="col">Support Email</th>
+            <th scope="col"> </th>
+            <th scope="col"> </th>
+          </tr>
+        </thead>
+        <tbody>{allhotels ? renderHotels : <p>No Requests</p>}</tbody>
+      </table>
+    </>
+  );
+};
+let NatuarlPlaces = ({ allNaturalPlaces }) => {
+  const { auth, setAuth } = useContext(AuthContext);
+  const [errMsg, setErrMsg] = useState("");
+  const [isloading, setIsLooading] = useState(false);
+
+  const handleAccept = async (id) => {
+    const formData = new FormData();
+    formData.append("id", id);
+    setIsLooading(true);
+    setErrMsg("");
+    // if(done !==0){
+    try {
+      const response = await axios.post("/api/AcceptPlace", formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.atoken}`,
+        },
+        withCredentials: true,
+      });
+      console.log(response);
+    } catch (err) {
+      setIsLooading(false);
+      if (err?.message) {
+        setErrMsg(err.response.data.message);
+        console.log(err.response.data.message);
+      }
+    }
+  };
+  const handleReject = async (id) => {
+    const formData = new FormData();
+    formData.append("id", id);
+    setIsLooading(true);
+    setErrMsg("");
+    // if(done !==0){
+    try {
+      const response = await axios.post("/api/RefusPlace", formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.atoken}`,
+        },
+        withCredentials: true,
+      });
+      console.log(response);
+    } catch (err) {
+      setIsLooading(false);
+      if (err?.message) {
+        setErrMsg(err.response.data.message);
+        console.log(err.response.data.message);
+      }
+    }
+  };
+
+  let renderHotels;
+  let renderOwnerShipImage;
+  let renderNaturalPlacetImage;
+  if (allNaturalPlaces) {
+    renderHotels = allNaturalPlaces.map((naturalplace) => {
+      return (
+        <>
+          <tr className="table-info  ">
+            <th scope="row ">{naturalplace.id}</th>
+            <td>{naturalplace.name}</td>
+            <td>{naturalplace.location}</td>
+            <td>
+              <div className="img-list">
+                {naturalplace.image.map((img, i) => {
+                  if (i >= 3) {
+                    return <></>;
+                  }
+                  return (
+                    <div className="place-img" data-bs-placement="buttom">
+                      <img
+                        type="button"
+                        data-bs-toggle="modal"
+                        data-bs-target={`#restImages-${naturalplace.id}`}
+                        className={""}
+                        src={baseURl + img.img}
+                        alt={".."}
+                      />
+                    </div>
+                  );
+                })}
+                <div
+                  className={`place-img other-imgs-plus ${
+                    naturalplace.image.length - 3 <= 0 && "d-none"
+                  }`}
+                >
+                  +{naturalplace.image.length - 3}
+                </div>
+              </div>
+            </td>
+            <td>See Food</td>
+            <td>{naturalplace.support_email}</td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-success "
+                onClick={() => {
+                  handleAccept(naturalplace.id);
+                }}
+              >
+                Accept
+              </button>
+            </td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-danger "
+                onClick={() => {
+                  handleReject(naturalplace.id);
+                }}
+              >
+                Reject
+              </button>
+            </td>
+          </tr>
+        </>
+      );
+    });
+    renderNaturalPlacetImage = allNaturalPlaces.map((naturalplace) => {
+      return (
+        <div
+          class="modal fade"
+          id={`restImages-${naturalplace.id}`}
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  Images
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div
+                  id={`carouselExampleIndicators-${naturalplace.id}`}
+                  class="carousel carousel-dark slide"
+                  data-bs-ride="true"
+                >
+                  <div class="carousel-indicators">
+                    {naturalplace.image.map((img, i) => {
+                      return (
+                        <>
+                          <button
+                            type="button"
+                            data-bs-target={`#carouselExampleIndicators-${naturalplace.id}`}
+                            data-bs-slide-to={i}
+                            class="active"
+                            aria-current="true"
+                            aria-label={`Slide ${i + 1}`}
+                          ></button>
+                        </>
+                      );
+                    })}
+                  </div>
+                  <div class="carousel-inner ">
+                    {naturalplace.image.map((img, i) => {
+                      return (
+                        <div
+                          key={img.id}
+                          class={`carousel-item ${i === 0 && "active"} `}
+                        >
+                          <img
+                            src={baseURl + img.img}
+                            class="d-block w-100"
+                            alt="..."
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <button
+                    class="carousel-control-prev"
+                    type="button"
+                    data-bs-target={`#carouselExampleIndicators-${naturalplace.id}`}
+                    data-bs-slide="prev"
+                  >
+                    <span
+                      class="carousel-control-prev-icon"
+                      aria-hidden="true"
+                    ></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button
+                    class="carousel-control-next"
+                    type="button"
+                    data-bs-target={`#carouselExampleIndicators-${naturalplace.id}`}
+                    data-bs-slide="next"
+                  >
+                    <span
+                      class="carousel-control-next-icon"
+                      aria-hidden="true"
+                    ></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    });
+  }
+  return (
+    <>
+      {renderOwnerShipImage}
+      {renderNaturalPlacetImage}
+      {/* -========================================== */}
       <table className="table  text-center ">
         <thead>
           <tr className="table-dark ">
@@ -427,63 +818,233 @@ let NatuarlPlaces = () => {
             <th scope="col"> </th>
           </tr>
         </thead>
-        <tbody>
-          <tr className="table-light  text-center">
-            <th scope="row">1</th>
-            <td>Forest</td>
-            <td>Al-gab</td>
+        <tbody>{allNaturalPlaces ? renderHotels : <p>No Requests</p>}</tbody>
+      </table>
+    </>
+  );
+};
+let AirLines = ({ allAirLines }) => {
+  const { auth, setAuth } = useContext(AuthContext);
+  const [errMsg, setErrMsg] = useState("");
+  const [isloading, setIsLooading] = useState(false);
+
+  const handleAccept = async (id) => {
+    const formData = new FormData();
+    formData.append("id", id);
+    setIsLooading(true);
+    setErrMsg("");
+    // if(done !==0){
+    try {
+      const response = await axios.post("/api/AcceptAirplane", formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.atoken}`,
+        },
+        withCredentials: true,
+      });
+      console.log(response);
+    } catch (err) {
+      setIsLooading(false);
+      if (err?.message) {
+        setErrMsg(err.response.data.message);
+        console.log(err.response.data.message);
+      }
+    }
+  };
+  const handleReject = async (id) => {
+    const formData = new FormData();
+    formData.append("id", id);
+    setIsLooading(true);
+    setErrMsg("");
+    // if(done !==0){
+    try {
+      const response = await axios.post("/api/RefusAirplane", formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.atoken}`,
+        },
+        withCredentials: true,
+      });
+      console.log(response);
+    } catch (err) {
+      setIsLooading(false);
+      if (err?.message) {
+        setErrMsg(err.response.data.message);
+        console.log(err.response.data.message);
+      }
+    }
+  };
+
+  let renderAirlines;
+  let renderOwnerShipImage;
+  if (allAirLines) {
+    renderAirlines = allAirLines.map((airline) => {
+      return (
+        <>
+          <tr className="table-primary  ">
+            <th scope="row ">{airline.id}</th>
+            <td>{airline.name}</td>
+            <td>{airline.location}</td>
             <td>
-              <img
-                className={"img-model"}
-                width={"40px"}
-                height={"40px"}
-                src={"/logo/55.png"}
-                alt={".."}
-              />
-              <img
-                className={"img-model"}
-                width={"40px"}
-                height={"40px"}
-                src={"/logo/55.png"}
-                alt={".."}
-              />
-              <img
-                className={"img-model"}
-                width={"40px"}
-                height={"40px"}
-                src={"/logo/55.png"}
-                alt={".."}
-              />
+              {airline.classes.map((classs, i) => {
+                return (
+                  <>
+                    <u>
+                      {classs.class_name} : {classs.money} $
+                    </u>
+                    <br />
+                  </>
+                );
+              })}
             </td>
-            <td>Natural</td>
-            <td>bb@g.com</td>
             <td>
-              <button type="button" class="btn btn-success ">
+              <div className="img-model">
+                <img
+                  type="button"
+                  data-bs-toggle="modal"
+                  data-bs-target={`#ownerCr-${airline.id}`}
+                  src={baseURl + airline.img_title_deed}
+                  alt={".."}
+                />
+              </div>
+            </td>
+            <td>{airline.support_email}</td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-success "
+                onClick={() => {
+                  handleAccept(airline.id);
+                }}
+              >
                 Accept
               </button>
             </td>
             <td>
-              <button type="button" class="btn btn-danger ">
+              <button
+                type="button"
+                class="btn btn-danger "
+                onClick={() => {
+                  handleReject(airline.id);
+                }}
+              >
                 Reject
               </button>
             </td>
-          </tr>{" "}
-        </tbody>
+          </tr>
+        </>
+      );
+    });
+    renderOwnerShipImage = allAirLines.map((airline) => {
+      return (
+        <div
+          class="modal fade "
+          id={`ownerCr-${airline.id}`}
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  OwnerShip Certificate
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body ownerShipImageInModal">
+                <img
+                  className={""}
+                  src={baseURl + airline.img_title_deed}
+                  alt={"..."}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    });
+  }
+  return (
+    <>
+      {renderOwnerShipImage}
+      {/* -========================================== */}
+      <table className="table  text-center ">
+        <thead>
+          <tr className="table-dark ">
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Location</th>
+            <th scope="col">Classes</th>
+            <th scope="col">Ownership Certificate</th>
+            <th scope="col">Support Email</th>
+            <th scope="col"> </th>
+            <th scope="col"> </th>
+          </tr>
+        </thead>
+        <tbody>{allAirLines ? renderAirlines : <p>No Requests</p>}</tbody>
       </table>
     </>
   );
 };
 
-let Users = () => {
-  let [userState, setUserState] = useState(2);
+let Requests = () => {
+  const [userState, setUserState] = useState(2);
+  const [errMsg, setErrMsg] = useState("");
+  const [isloading, setIsLooading] = useState(false);
+  const [resturants, setresturants] = useState([]);
+  const [hotels, sethotels] = useState([]);
+  const [airlines, setairlines] = useState();
+  const [naturalplaces, setnaturalplaces] = useState();
+  const { auth, setAuth } = useContext(AuthContext);
+
   let activeIconToggle = (e) => {
     let nav_link = document.querySelectorAll(".nav-link");
     nav_link.forEach((element) => {
       element.classList.remove("active");
     });
     e.target.classList.add("active");
-    console.log(e.target);
   };
+  // get all un active resturants
+  let {
+    data: rest,
+    fetchError: resterrors,
+    isLoading: restisloading,
+  } = useAxiosPost("/api/Show_Not_Active_Resturants");
+  // get all un active hotel
+  let {
+    data: hotel,
+    fetchError: hotelerrors,
+    isLoading: hotelisloading,
+  } = useAxiosPost("/api/Show_Not_Active_Hotels");
+  // get all un active allairlline
+  let {
+    data: airlline,
+    fetchError: airlineerrors,
+    isLoading: airlineisloading,
+  } = useAxiosPost("/api/Show_Not_Active_Airplanes");
+  // get all un active allnaturalplaces
+  let {
+    data: natural,
+    fetchError: naturalerrors,
+    isLoading: naturalisloading,
+  } = useAxiosPost("/api/Show_Not_Active_Places");
+  useEffect(() => {
+    setresturants(rest.restaurants);
+    sethotels(hotel.hotels);
+    setairlines(airlline.airplane);
+    setnaturalplaces(natural.Place);
+  }, [rest, hotel, airlline, natural]);
+  console.log("resturants", resturants);
+  console.log("hotels", hotels);
+  console.log("airlines", airlines);
+  console.log("naturalplaces", naturalplaces);
+
   return (
     <>
       <div className="container-fluid  col-11 dashborad-requests ">
@@ -552,22 +1113,22 @@ let Users = () => {
         {userState === 2 ? (
           <>
             {" "}
-            <Resturants />{" "}
+            <Resturants allresturants={resturants} />{" "}
           </>
         ) : userState === 3 ? (
           <>
             {" "}
-            <Hotels />{" "}
+            <Hotels allhotels={hotels} />{" "}
           </>
         ) : userState === 4 ? (
           <>
             {" "}
-            <AirLines />{" "}
+            <AirLines allAirLines={airlines} />{" "}
           </>
         ) : userState === 5 ? (
           <>
             {" "}
-            <NatuarlPlaces />{" "}
+            <NatuarlPlaces allNaturalPlaces={naturalplaces} />{" "}
           </>
         ) : (
           <></>
@@ -577,4 +1138,4 @@ let Users = () => {
   );
 };
 
-export default Users;
+export default Requests;
