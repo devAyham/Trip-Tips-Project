@@ -9,7 +9,7 @@ import axios from "../../../api/axios";
 import { useAxiosPost } from "../../../hooks/useAxiosFetch";
 import { baseURl } from "../../../api/baseURL";
 
-let Resturants = ({ allresturants }) => {
+let Resturants = ({ allresturants, flag, setflag, isinloading }) => {
   const { auth, setAuth } = useContext(AuthContext);
   const [errMsg, setErrMsg] = useState("");
   const [isloading, setIsLooading] = useState(false);
@@ -19,7 +19,6 @@ let Resturants = ({ allresturants }) => {
     formData.append("id", id);
     setIsLooading(true);
     setErrMsg("");
-    // if(done !==0){
     try {
       const response = await axios.post("/api/AcceptResturant", formData, {
         headers: {
@@ -29,6 +28,8 @@ let Resturants = ({ allresturants }) => {
         withCredentials: true,
       });
       console.log(response);
+      setIsLooading(false);
+      setflag(!flag);
     } catch (err) {
       setIsLooading(false);
       if (err?.message) {
@@ -52,6 +53,8 @@ let Resturants = ({ allresturants }) => {
         withCredentials: true,
       });
       console.log(response);
+      setIsLooading(false);
+      setflag(!flag);
     } catch (err) {
       setIsLooading(false);
       if (err?.message) {
@@ -68,76 +71,85 @@ let Resturants = ({ allresturants }) => {
     renderResturants = allresturants.map((resturant) => {
       return (
         <>
-          <tr className="table-warning  ">
-            <th scope="row ">{resturant.id}</th>
-            <td>{resturant.name}</td>
-            <td>{resturant.location}</td>
-            <td>
-              <div className="img-list">
-                {resturant.images.map((img, i) => {
-                  if (i >= 3) {
-                    return <></>;
-                  }
-                  return (
-                    <div className="place-img" data-bs-placement="buttom">
-                      <img
-                        type="button"
-                        data-bs-toggle="modal"
-                        data-bs-target={`#restImages-${resturant.id}`}
-                        className={""}
-                        src={baseURl + img.img}
-                        alt={".."}
-                      />
+          {isloading || isinloading ? (
+            <h1>Loading</h1>
+          ) : (
+            <>
+              <tr className="table-warning  ">
+                <th scope="row ">{resturant.id}</th>
+                <td>{resturant.name}</td>
+                <td>{resturant.location}</td>
+                <td>
+                  <div className="img-list">
+                    {resturant.images.map((img, i) => {
+                      if (i >= 3) {
+                        return <></>;
+                      }
+                      return (
+                        <div className="place-img" data-bs-placement="buttom">
+                          <img
+                            type="button"
+                            data-bs-toggle="modal"
+                            data-bs-target={`#restImages-${resturant.id}`}
+                            className={""}
+                            src={baseURl + img.img}
+                            alt={".."}
+                          />
+                        </div>
+                      );
+                    })}
+                    <div
+                      type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target={`#restImages-${resturant.id}`}
+                      className={`place-img other-imgs-plus ${
+                        resturant.images.length - 3 <= 0 && "d-none"
+                      }`}
+                    >
+                      +{resturant.images.length - 3}
                     </div>
-                  );
-                })}
-                <div
-                  className={`place-img other-imgs-plus ${
-                    resturant.images.length - 3 <= 0 && "d-none"
-                  }`}
-                >
-                  +{resturant.images.length - 3}
-                </div>
-              </div>
-            </td>
-            <td>See Food</td>
-            <td>{resturant.rate} Stars </td>
-            <td>{resturant.price_booking}</td>
-            <td>
-              <div className="img-model">
-                <img
-                  type="button"
-                  data-bs-toggle="modal"
-                  data-bs-target={`#ownerCr-${resturant.id}`}
-                  src={baseURl + resturant.img_title_deed}
-                  alt={".."}
-                />
-              </div>
-            </td>
-            <td>{resturant.support_email}</td>
-            <td>
-              <button
-                type="button"
-                class="btn btn-success "
-                onClick={() => {
-                  handleAccept(resturant.id);
-                }}
-              >
-                Accept
-              </button>
-            </td>
-            <td>
-              <button
-                type="button"
-                class="btn btn-danger "
-                onClick={() => {
-                  handleReject(resturant.id);
-                }}
-              >
-                Reject
-              </button>
-            </td>
-          </tr>
+                  </div>
+                </td>
+                <td>See Food</td>
+                <td>{resturant.rate} Stars </td>
+                <td>{resturant.price_booking}</td>
+                <td>
+                  <div className="img-model">
+                    <img
+                      type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target={`#ownerCr-${resturant.id}`}
+                      src={baseURl + resturant.img_title_deed}
+                      alt={".."}
+                    />
+                  </div>
+                </td>
+                <td>{resturant.support_email}</td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-success "
+                    onClick={() => {
+                      handleAccept(resturant.id);
+                    }}
+                  >
+                    Accept
+                  </button>
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-danger "
+                    onClick={() => {
+                      handleReject(resturant.id);
+                    }}
+                  >
+                    Reject
+                  </button>
+                </td>
+              </tr>
+            </>
+          )}
         </>
       );
     });
@@ -293,7 +305,7 @@ let Resturants = ({ allresturants }) => {
     </>
   );
 };
-let Hotels = ({ allhotels }) => {
+let Hotels = ({ allhotels, flag, setflag, isinloading }) => {
   const { auth, setAuth } = useContext(AuthContext);
   const [errMsg, setErrMsg] = useState("");
   const [isloading, setIsLooading] = useState(false);
@@ -313,6 +325,7 @@ let Hotels = ({ allhotels }) => {
         withCredentials: true,
       });
       console.log(response);
+      setflag(!flag);
     } catch (err) {
       setIsLooading(false);
       if (err?.message) {
@@ -336,6 +349,7 @@ let Hotels = ({ allhotels }) => {
         withCredentials: true,
       });
       console.log(response);
+      setflag(!flag);
     } catch (err) {
       setIsLooading(false);
       if (err?.message) {
@@ -376,6 +390,9 @@ let Hotels = ({ allhotels }) => {
                   );
                 })}
                 <div
+                  type="button"
+                  data-bs-toggle="modal"
+                  data-bs-target={`#restImages-${hotel.id}`}
                   className={`place-img other-imgs-plus ${
                     hotel.images.length - 3 <= 0 && "d-none"
                   }`}
@@ -568,28 +585,207 @@ let Hotels = ({ allhotels }) => {
       {renderOwnerShipImage}
       {renderHoteltImage}
       {/* -========================================== */}
-      <table className="table  text-center ">
-        <thead>
-          <tr className="table-dark ">
-            <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Location</th>
-            <th scope="col">Images</th>
-            <th scope="col">Category</th>
-            <th scope="col">Rate</th>
-            <th scope="col">Classes</th>
-            <th scope="col">Ownership Certificate</th>
-            <th scope="col">Support Email</th>
-            <th scope="col"> </th>
-            <th scope="col"> </th>
-          </tr>
-        </thead>
-        <tbody>{allhotels ? renderHotels : <p>No Requests</p>}</tbody>
-      </table>
+      {isloading || isinloading ? (
+        <h1>Loading</h1>
+      ) : (
+        <table className="table  text-center ">
+          <thead>
+            <tr className="table-dark ">
+              <th scope="col">ID</th>
+              <th scope="col">Name</th>
+              <th scope="col">Location</th>
+              <th scope="col">Images</th>
+              <th scope="col">Category</th>
+              <th scope="col">Rate</th>
+              <th scope="col">Classes</th>
+              <th scope="col">Ownership Certificate</th>
+              <th scope="col">Support Email</th>
+              <th scope="col"> </th>
+              <th scope="col"> </th>
+            </tr>
+          </thead>
+          <tbody>{allhotels ? renderHotels : <p>No Requests</p>}</tbody>
+        </table>
+      )}
     </>
   );
 };
-let NatuarlPlaces = ({ allNaturalPlaces }) => {
+let AirLines = ({ allAirLines, flag, setflag, isinloading }) => {
+  const { auth, setAuth } = useContext(AuthContext);
+  const [errMsg, setErrMsg] = useState("");
+  const [isloading, setIsLooading] = useState(false);
+
+  const handleAccept = async (id) => {
+    const formData = new FormData();
+    formData.append("id", id);
+    setIsLooading(true);
+    setErrMsg("");
+    // if(done !==0){
+    try {
+      const response = await axios.post("/api/AcceptAirplane", formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.atoken}`,
+        },
+        withCredentials: true,
+      });
+      console.log(response);
+      setflag(!flag);
+    } catch (err) {
+      setIsLooading(false);
+      if (err?.message) {
+        setErrMsg(err.response.data.message);
+        console.log(err.response.data.message);
+      }
+    }
+  };
+  const handleReject = async (id) => {
+    const formData = new FormData();
+    formData.append("id", id);
+    setIsLooading(true);
+    setErrMsg("");
+    // if(done !==0){
+    try {
+      const response = await axios.post("/api/RefusAirplane", formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.atoken}`,
+        },
+        withCredentials: true,
+      });
+      console.log(response);
+      setflag(!flag);
+    } catch (err) {
+      setIsLooading(false);
+      if (err?.message) {
+        setErrMsg(err.response.data.message);
+        console.log(err.response.data.message);
+      }
+    }
+  };
+
+  let renderAirlines;
+  let renderOwnerShipImage;
+  if (allAirLines) {
+    renderAirlines = allAirLines.map((airline) => {
+      return (
+        <>
+          <tr className="table-primary  ">
+            <th scope="row ">{airline.id}</th>
+            <td>{airline.name}</td>
+            <td>{airline.location}</td>
+            <td>
+              {airline.classes.map((classs, i) => {
+                return (
+                  <>
+                    <u>
+                      {classs.class_name} : {classs.money} $
+                    </u>
+                    <br />
+                  </>
+                );
+              })}
+            </td>
+            <td>
+              <div className="img-model">
+                <img
+                  type="button"
+                  data-bs-toggle="modal"
+                  data-bs-target={`#ownerCr-${airline.id}`}
+                  src={baseURl + airline.img_title_deed}
+                  alt={".."}
+                />
+              </div>
+            </td>
+            <td>{airline.support_email}</td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-success "
+                onClick={() => {
+                  handleAccept(airline.id);
+                }}
+              >
+                Accept
+              </button>
+            </td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-danger "
+                onClick={() => {
+                  handleReject(airline.id);
+                }}
+              >
+                Reject
+              </button>
+            </td>
+          </tr>
+        </>
+      );
+    });
+    renderOwnerShipImage = allAirLines.map((airline) => {
+      return (
+        <div
+          class="modal fade "
+          id={`ownerCr-${airline.id}`}
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  OwnerShip Certificate
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body ownerShipImageInModal">
+                <img
+                  className={""}
+                  src={baseURl + airline.img_title_deed}
+                  alt={"..."}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    });
+  }
+  return (
+    <>
+      {renderOwnerShipImage}
+      {/* -========================================== */}
+      {isloading || isinloading ? (
+        <h1>Loading</h1>
+      ) : (
+        <table className="table  text-center ">
+          <thead>
+            <tr className="table-dark ">
+              <th scope="col">ID</th>
+              <th scope="col">Name</th>
+              <th scope="col">Location</th>
+              <th scope="col">Classes</th>
+              <th scope="col">Ownership Certificate</th>
+              <th scope="col">Support Email</th>
+              <th scope="col"> </th>
+              <th scope="col"> </th>
+            </tr>
+          </thead>
+          <tbody>{allAirLines ? renderAirlines : <p>No Requests</p>}</tbody>
+        </table>
+      )}
+    </>
+  );
+};
+let NatuarlPlaces = ({ allNaturalPlaces, flag, setflag, isinloading }) => {
   const { auth, setAuth } = useContext(AuthContext);
   const [errMsg, setErrMsg] = useState("");
   const [isloading, setIsLooading] = useState(false);
@@ -609,6 +805,8 @@ let NatuarlPlaces = ({ allNaturalPlaces }) => {
         withCredentials: true,
       });
       console.log(response);
+      setIsLooading(false);
+      setflag(!flag);
     } catch (err) {
       setIsLooading(false);
       if (err?.message) {
@@ -632,6 +830,8 @@ let NatuarlPlaces = ({ allNaturalPlaces }) => {
         withCredentials: true,
       });
       console.log(response);
+      setIsLooading(false);
+      setflag(!flag);
     } catch (err) {
       setIsLooading(false);
       if (err?.message) {
@@ -641,11 +841,10 @@ let NatuarlPlaces = ({ allNaturalPlaces }) => {
     }
   };
 
-  let renderHotels;
-  let renderOwnerShipImage;
+  let renderNatural;
   let renderNaturalPlacetImage;
   if (allNaturalPlaces) {
-    renderHotels = allNaturalPlaces.map((naturalplace) => {
+    renderNatural = allNaturalPlaces.map((naturalplace) => {
       return (
         <>
           <tr className="table-info  ">
@@ -672,6 +871,9 @@ let NatuarlPlaces = ({ allNaturalPlaces }) => {
                   );
                 })}
                 <div
+                  type="button"
+                  data-bs-toggle="modal"
+                  data-bs-target={`#restImages-${naturalplace.id}`}
                   className={`place-img other-imgs-plus ${
                     naturalplace.image.length - 3 <= 0 && "d-none"
                   }`}
@@ -802,9 +1004,11 @@ let NatuarlPlaces = ({ allNaturalPlaces }) => {
   }
   return (
     <>
-      {renderOwnerShipImage}
       {renderNaturalPlacetImage}
       {/* -========================================== */}
+      {isloading || isinloading ? (
+        <h1>Loading</h1>
+      ) : (
       <table className="table  text-center ">
         <thead>
           <tr className="table-dark ">
@@ -818,190 +1022,23 @@ let NatuarlPlaces = ({ allNaturalPlaces }) => {
             <th scope="col"> </th>
           </tr>
         </thead>
-        <tbody>{allNaturalPlaces ? renderHotels : <p>No Requests</p>}</tbody>
+        <tbody>{allNaturalPlaces ? renderNatural : <p>No Requests</p>}</tbody>
       </table>
-    </>
-  );
-};
-let AirLines = ({ allAirLines }) => {
-  const { auth, setAuth } = useContext(AuthContext);
-  const [errMsg, setErrMsg] = useState("");
-  const [isloading, setIsLooading] = useState(false);
-
-  const handleAccept = async (id) => {
-    const formData = new FormData();
-    formData.append("id", id);
-    setIsLooading(true);
-    setErrMsg("");
-    // if(done !==0){
-    try {
-      const response = await axios.post("/api/AcceptAirplane", formData, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.atoken}`,
-        },
-        withCredentials: true,
-      });
-      console.log(response);
-    } catch (err) {
-      setIsLooading(false);
-      if (err?.message) {
-        setErrMsg(err.response.data.message);
-        console.log(err.response.data.message);
-      }
-    }
-  };
-  const handleReject = async (id) => {
-    const formData = new FormData();
-    formData.append("id", id);
-    setIsLooading(true);
-    setErrMsg("");
-    // if(done !==0){
-    try {
-      const response = await axios.post("/api/RefusAirplane", formData, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.atoken}`,
-        },
-        withCredentials: true,
-      });
-      console.log(response);
-    } catch (err) {
-      setIsLooading(false);
-      if (err?.message) {
-        setErrMsg(err.response.data.message);
-        console.log(err.response.data.message);
-      }
-    }
-  };
-
-  let renderAirlines;
-  let renderOwnerShipImage;
-  if (allAirLines) {
-    renderAirlines = allAirLines.map((airline) => {
-      return (
-        <>
-          <tr className="table-primary  ">
-            <th scope="row ">{airline.id}</th>
-            <td>{airline.name}</td>
-            <td>{airline.location}</td>
-            <td>
-              {airline.classes.map((classs, i) => {
-                return (
-                  <>
-                    <u>
-                      {classs.class_name} : {classs.money} $
-                    </u>
-                    <br />
-                  </>
-                );
-              })}
-            </td>
-            <td>
-              <div className="img-model">
-                <img
-                  type="button"
-                  data-bs-toggle="modal"
-                  data-bs-target={`#ownerCr-${airline.id}`}
-                  src={baseURl + airline.img_title_deed}
-                  alt={".."}
-                />
-              </div>
-            </td>
-            <td>{airline.support_email}</td>
-            <td>
-              <button
-                type="button"
-                class="btn btn-success "
-                onClick={() => {
-                  handleAccept(airline.id);
-                }}
-              >
-                Accept
-              </button>
-            </td>
-            <td>
-              <button
-                type="button"
-                class="btn btn-danger "
-                onClick={() => {
-                  handleReject(airline.id);
-                }}
-              >
-                Reject
-              </button>
-            </td>
-          </tr>
-        </>
-      );
-    });
-    renderOwnerShipImage = allAirLines.map((airline) => {
-      return (
-        <div
-          class="modal fade "
-          id={`ownerCr-${airline.id}`}
-          tabindex="-1"
-          aria-labelledby="exampleModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">
-                  OwnerShip Certificate
-                </h5>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div className="modal-body ownerShipImageInModal">
-                <img
-                  className={""}
-                  src={baseURl + airline.img_title_deed}
-                  alt={"..."}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    });
-  }
-  return (
-    <>
-      {renderOwnerShipImage}
-      {/* -========================================== */}
-      <table className="table  text-center ">
-        <thead>
-          <tr className="table-dark ">
-            <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Location</th>
-            <th scope="col">Classes</th>
-            <th scope="col">Ownership Certificate</th>
-            <th scope="col">Support Email</th>
-            <th scope="col"> </th>
-            <th scope="col"> </th>
-          </tr>
-        </thead>
-        <tbody>{allAirLines ? renderAirlines : <p>No Requests</p>}</tbody>
-      </table>
+      )}
     </>
   );
 };
 
 let Requests = () => {
   const [userState, setUserState] = useState(2);
-  const [errMsg, setErrMsg] = useState("");
-  const [isloading, setIsLooading] = useState(false);
   const [resturants, setresturants] = useState([]);
   const [hotels, sethotels] = useState([]);
   const [airlines, setairlines] = useState();
   const [naturalplaces, setnaturalplaces] = useState();
-  const { auth, setAuth } = useContext(AuthContext);
+  const [restflag, setrestflag] = useState(false);
+  const [hotflag, sethotflag] = useState(false);
+  const [airflag, setairflag] = useState(false);
+  const [placeflag, setplaceflag] = useState(false);
 
   let activeIconToggle = (e) => {
     let nav_link = document.querySelectorAll(".nav-link");
@@ -1015,25 +1052,25 @@ let Requests = () => {
     data: rest,
     fetchError: resterrors,
     isLoading: restisloading,
-  } = useAxiosPost("/api/Show_Not_Active_Resturants");
+  } = useAxiosPost("/api/Show_Not_Active_Resturants", restflag);
   // get all un active hotel
   let {
     data: hotel,
     fetchError: hotelerrors,
     isLoading: hotelisloading,
-  } = useAxiosPost("/api/Show_Not_Active_Hotels");
+  } = useAxiosPost("/api/Show_Not_Active_Hotels", hotflag);
   // get all un active allairlline
   let {
     data: airlline,
     fetchError: airlineerrors,
     isLoading: airlineisloading,
-  } = useAxiosPost("/api/Show_Not_Active_Airplanes");
+  } = useAxiosPost("/api/Show_Not_Active_Airplanes", airflag);
   // get all un active allnaturalplaces
   let {
     data: natural,
     fetchError: naturalerrors,
     isLoading: naturalisloading,
-  } = useAxiosPost("/api/Show_Not_Active_Places");
+  } = useAxiosPost("/api/Show_Not_Active_Places", placeflag);
   useEffect(() => {
     setresturants(rest.restaurants);
     sethotels(hotel.hotels);
@@ -1112,23 +1149,59 @@ let Requests = () => {
         </ul>
         {userState === 2 ? (
           <>
-            {" "}
-            <Resturants allresturants={resturants} />{" "}
+            {restisloading ? (
+              <h1>Loading</h1>
+            ) : (
+              <>
+                <Resturants
+                  allresturants={resturants}
+                  flag={restflag}
+                  setflag={setrestflag}
+                  isinloading={restisloading}
+                />{" "}
+              </>
+            )}
           </>
         ) : userState === 3 ? (
           <>
-            {" "}
-            <Hotels allhotels={hotels} />{" "}
+            {hotelisloading ? (
+              <h1>Loading</h1>
+            ) : (
+              <>
+                <Hotels
+                  allhotels={hotels}
+                  flag={hotflag}
+                  setflag={sethotflag}
+                  isinloading={hotelisloading}
+                />
+              </>
+            )}
           </>
         ) : userState === 4 ? (
           <>
-            {" "}
-            <AirLines allAirLines={airlines} />{" "}
+            {airlineisloading ? (
+              <h1>Loading</h1>
+            ) : (
+              <AirLines
+                allAirLines={airlines}
+                flag={airflag}
+                setflag={setairflag}
+                isinloading={airlineisloading}
+              />
+            )}
           </>
         ) : userState === 5 ? (
           <>
-            {" "}
-            <NatuarlPlaces allNaturalPlaces={naturalplaces} />{" "}
+            {airlineisloading ? (
+              <h1>Loading</h1>
+            ) : (
+              <NatuarlPlaces
+                allNaturalPlaces={naturalplaces}
+                flag={placeflag}
+                setflag={setplaceflag}
+                isinloading={naturalisloading}
+              />
+            )}
           </>
         ) : (
           <></>

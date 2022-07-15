@@ -44,7 +44,7 @@ const useAxiosGet = (dataUrl) => {
 
   return { data, fetchError, isLoading };
 };
-const useAxiosPost = (dataUrl ,body=null ) => {
+const useAxiosPost = (dataUrl , flag=false ,body=null ) => {
   const [data, setData] = useState([]);
   const [fetchError, setFetchError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -58,7 +58,7 @@ const useAxiosPost = (dataUrl ,body=null ) => {
       setIsLoading(true);
       try {
         const response = await axios.post(url, 
-            JSON.stringify(data),
+            JSON.stringify(body),
             {
           headers: {
             "Content-Type": "application/json",
@@ -89,7 +89,7 @@ const useAxiosPost = (dataUrl ,body=null ) => {
       source.cancel();
     };
     return cleanUp;
-  }, [dataUrl, auth.atoken]);
+  }, [dataUrl,body,auth.atoken ,flag]);
 
   return { data, fetchError, isLoading };
 };
