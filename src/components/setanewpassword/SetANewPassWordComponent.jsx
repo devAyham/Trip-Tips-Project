@@ -26,11 +26,11 @@ let SetANewPassWord = ({token = null,email = null,url,redirect}) => {
     trigger,
     getValues,
   } = useForm();
-  const OnpassSubmit = async ({ password }) => {
+  const OnpassSubmit = async ({ password , c_password }) => {
     try {
       const response = await axios.post(
         url,
-        JSON.stringify({ password ,token ,email}),
+        JSON.stringify({ password ,c_password,token ,email}),
         {
           headers: {
             "Content-Type": "application/json",

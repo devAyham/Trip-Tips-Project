@@ -7,6 +7,7 @@ import {
   faHotel,
   faImages,
   faMapLocationDot,
+  faMartiniGlassCitrus,
   faMinusCircle,
   faMoneyBill,
   faMountainSun,
@@ -25,15 +26,48 @@ import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import axios from "../../../api/axios";
 import AuthContext from "../../../context/AuthProvider";
+import { useAxiosGet, useAxiosPost } from "../../../hooks/useAxiosFetch";
 import ReCAPTCHA from "../../reCAPTCHA/reCAPTCHAComponent";
 
-let AddPlacesToPackage = () => {
+let AddPlacesToPackage = ({ packageInfo }) => {
+  let start_date = new Date(packageInfo.start_date).toISOString();
+  let end_date = new Date(packageInfo.end_date).toISOString();
+  console.log(start_date, end_date);
+  console.log(start_date > end_date);
+  console.log(start_date < end_date);
+  console.log("2022-07-16T16:34:00.000Z" >= end_date);
+
   const [errMsg, setErrMsg] = useState("");
   const [notArobot, setnotArobot] = useState(false);
   const [naturalFiledsNumb, setnaturalFiledsNumb] = useState(0);
   const [reustrantsFiledsNumb, setreustrantsFiledsNumb] = useState(0);
   const [hotelsFiledsNumb, sethotelslFiledsNumb] = useState(0);
   const [airlinesFiledsNumb, setairlinesFiledsNumb] = useState(0);
+  const [isloading, setIsLooading] = useState(false);
+  const { auth, setAuth } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const {
+    data: allresturants,
+    fetchError: allresturantsErrors,
+    isLoading: allresturantsIsLoading,
+  } = useAxiosPost("/api/ShowAllResturants");
+  const {
+    data: allhotel,
+    fetchError: allhotelErrors,
+    isLoading: allhotelIsLoading,
+  } = useAxiosPost("/api/ShowAllHotels");
+  const {
+    data: allplaces,
+    fetchError: allplacesErrors,
+    isLoading: allplacesIsLoading,
+  } = useAxiosPost("/api/ShowAllPlaces");
+  const {
+    data: allairplanes,
+    fetchError: allairplanesErrors,
+    isLoading: allairplanesIsLoading,
+  } = useAxiosPost("/api/ShowAllAirplane");
+  console.log(allairplanes);
 
   const {
     register,
@@ -43,147 +77,277 @@ let AddPlacesToPackage = () => {
     getValues,
   } = useForm();
   let errorSize = Object.keys(errors).length;
-  let OnSubmit = async () => {};
+  const OnSubmit = async (values) => {
+    // var s = new Date(start_date).toISOString().slice(0,19).split('T').join(" ")
+    console.log(values);
+    const formdata = new FormData();
+    formdata.append("package_id", packageInfo.id);
+    for (let i = 0; i < values.restaurant_id?.length; i++) {
+      formdata.append(`restaurant_id[${i}]`, values.restaurant_id[i]);
+      let d = new Date(values.restaurant_booking_date[i])
+        .toISOString()
+        .split("T")[0];
+      console.log(d);
+      formdata.append(`restaurant_booking_date[${i}]`, d);
+    }
+    for (let i = 0; i < values.hotel_class_id?.length; i++) {
+      formdata.append(`hotel_class_id[${i}]`, values.hotel_class_id[i]);
+      let s = new Date(values.hotel_booking_start_date[i])
+        .toISOString()
+        .split("T")[0];
+      console.log(s);
+      formdata.append(`hotel_booking_start_date[${i}]`, s);
+      let e = new Date(values.hotel_booking_end_date[i])
+        .toISOString()
+        .split("T")[0];
+      console.log(e);
+      formdata.append(`hotel_booking_end_date[${i}]`, e);
+    }
+    for (let i = 0; i < values.airplane_class_id?.length; i++) {
+      formdata.append(`airplane_class_id[${i}]`, values.airplane_class_id[i]);
+      let d = new Date(values.airplane_booking_date[i])
+        .toISOString()
+        .split("T")[0];
+      console.log(d);
+      formdata.append(`airplane_booking_date[${i}]`, d);
+      formdata.append(`from[${i}]`, values.from[i]);
+      formdata.append(`to[${i}]`, values.to[i]);
+    }
+    for (let i = 0; i < values.place_id?.length; i++) {
+      formdata.append(`restaurant_id[${i}]`, values.place_id[i]);
+      let d = new Date(values.place_booking[i]).toISOString().split("T")[0];
+      console.log(d);
+      formdata.append(`place_booking[${i}]`, d);
+    }
 
+    // formdata.append('package_id',1)
+    // formdata.append('restaurant_id[]',values.restaurant_id)
+    // formdata.append('restaurant_booking_date[]',values.restaurant_booking_date)
+    // formdata.append('hotel_class_id[]',values.hotel_class_id)
+    // formdata.append('hotel_booking_start_date[]',values.hotel_booking_start_date)
+    // formdata.append('hotel_booking_end_date[]',values.hotel_booking_end_date)
+    // formdata.append('airplane_class_id[]',values.airplane_class_id)
+    // formdata.append('airplane_booking_date[]',values.airplane_booking_date)
+    // formdata.append('from[0]','blah')
+    // formdata.append('to[0]','blah')
+    // formdata.append('place_id[]',values.place_id)
+    // formdata.append('place_booking[]',values.place_booking)
+    setIsLooading(true);
+    try {
+      const response = await axios.post(
+        "/api/addFaciliticsToPackage",
+        formdata,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.atoken}`,
+          },
+          withCredentials: true,
+          mode: "no-cros",
+        }
+      );
+      console.log(response);
+      navigate(-1);
+      setIsLooading(false);
+    } catch (err) {
+      setIsLooading(false);
+      if (!err?.message) {
+        setErrMsg("No Server Response");
+        console.log("No Server Response");
+      } else if (err?.response?.status === 0) {
+        setErrMsg(err.message);
+        console.log(errMsg);
+      } else if (err?.response?.status === 400) {
+        setErrMsg(err.response.data.message);
+        console.log(errMsg);
+      } else if (err?.response?.status === 401) {
+        setErrMsg(err.response.data.message);
+        console.log(errMsg);
+      } else {
+        setErrMsg("Add Package Failed");
+        console.log(err);
+      }
+    }
+  };
   let RenderNaturalPlace = () => {
     const row = [];
     for (var i = 0; i < naturalFiledsNumb; i++) {
-      row.push(<AddNaturalPlace key={i} />);
+      row.push(<AddNaturalPlace key={i} id={i} />);
     }
     return row;
   };
-  let AddNaturalPlace = () => {
+  let AddNaturalPlace = ({ id }) => {
     return (
       <>
-      <div className="row">
-        <div className="col-6">
-          <div className="input-group input-group-lg mb-1 ms-sm-5">
-            <span
-              className="input-group-text fs-3  filed-icon"
-              id="basic-addon1"
-            >
-              <FontAwesomeIcon icon={faMountainSun} />
-            </span>
-            <select
-              className={`form-select  filed ${errors.natural && "invalid"}`}
-              {...register("natural", {
-                required: "One Natural Place At least Required",
-              })}
-              onKeyUp={() => {
-                trigger("natural");
-                errorSize = Object.keys(errors).length;
-              }}
-              aria-label="Default select example"
-            >
-              <option value="">Natural Palces </option>
-              <option value="+963">Ahmad </option>
-              <option value="+777">Egypt </option>
-              <option value="+45 ">Jordun</option>
-              <option value="+343">KSA </option>
-              <option value="+111">Qatar </option>
-              <option value="+86 ">Turke </option>
-            </select>
-            {errors.natural && (
-              <small className="text-danger">{errors.natural.message}</small>
-            )}
+        <div className="row">
+          <div className="col-7">
+            <div className="input-group input-group-lg mb-1 ms-sm-5">
+              <span
+                className="input-group-text fs-3  filed-icon"
+                id="basic-addon1"
+              >
+                <FontAwesomeIcon icon={faMountainSun} />
+              </span>
+              <select
+                className={`form-select  filed ${
+                  errors?.place_id?.[id] && "invalid"
+                }`}
+                {...register(`place_id[${id}]`, {
+                  required: "One Natural Place At least Required",
+                })}
+                onKeyUp={() => {
+                  trigger(`place_id[${id}]`);
+                }}
+                onChange={() => {
+                  console.log(errors);
+                }}
+                aria-label="Default select example"
+              >
+                <option value="">Natural Palces </option>
+                {allplaces.Place.map((place) => {
+                  return (
+                    <option value={+place.id}>
+                      {" "}
+                      {place.name}/ <strong>Category : </strong>{" "}
+                      {place.category.name}/ <b>Location : </b> {place.location}{" "}
+                    </option>
+                  );
+                })}
+              </select>
+              {errors?.place_id?.[id] && (
+                <small className="text-danger">
+                  {errors?.place_id?.[id].message}
+                </small>
+              )}
+            </div>
+          </div>
+          <div className="col-5">
+            <div className="input-group input-group-lg  mb-1 ms-sm-5 ">
+              <span className={`input-group-text fs-3 filed filed-icon `}>
+                <FontAwesomeIcon icon={faCalendarDay} />
+              </span>
+              <input
+                type="datetime-local"
+                className={`form-control filed 
+                                      ${
+                                        errors?.place_booking?.[id] && "invalid"
+                                      }`}
+                {...register(`place_booking[${id}]`, {
+                  required: "Natural Trip Date is Required",
+                  validate: {
+                    start_data: (value) =>
+                      value >= start_date ||
+                      "Booking Time Should Be Greater Than start_date ",
+                    end_date: (value) =>
+                      value <= end_date ||
+                      "Booking Time Should Be Less Than end_date",
+                  },
+                })}
+                onKeyUp={() => {
+                  trigger(`place_booking[${id}]`);
+                }}
+                placeholder="tripData"
+              />
+              {errors?.place_booking?.[id] && (
+                <small className="text-danger">
+                  {errors?.place_booking?.[id]?.message}
+                </small>
+              )}
+            </div>
           </div>
         </div>
-        <div className="col-6">
-          <div className="input-group input-group-lg  mb-1 ms-sm-5 ">
-            <span className={`input-group-text fs-3 filed filed-icon `}>
-              <FontAwesomeIcon icon={faCalendarDay} />
-            </span>
-            <input
-              type="datetime-local"
-              className={`form-control filed 
-                                      ${errors.NData && "invalid"}`}
-              {...register("NData", {
-                required: "Natural Trip Date is Required",
-              })}
-              onKeyUp={() => {
-                trigger("tripData");
-              }}
-              placeholder="tripData"
-            />
-            {errors.NData && (
-              <small className="text-danger">{errors.NData.message}</small>
-            )}
-          </div>
-        </div>
-        </div>
-        <hr className={'col-6 mx-auto'}/>
-
+        <hr className={"col-6 mx-auto"} />
       </>
     );
   };
   let RenderResturants = () => {
     const row = [];
     for (var i = 0; i < reustrantsFiledsNumb; i++) {
-      row.push(<AddResturant key={i} />);
+      row.push(<AddResturant key={i} id={i} />);
     }
     return row;
   };
-  let AddResturant = () => {
+  let AddResturant = ({ id }) => {
     return (
       <>
-      <div className="row">
-        <div className="col-6 mx-auto">
-          <div className="input-group input-group-lg mb-1 ms-sm-5">
-            <span
-              className="input-group-text fs-3  filed-icon"
-              id="basic-addon1"
-            >
-              <FontAwesomeIcon icon={faUtensils} />
-            </span>
-            <select
-              className={`form-select  filed ${errors.resturant && "invalid"}`}
-              {...register("resturant", {
-                required: " Resturant  Required",
-              })}
-              onKeyUp={() => {
-                trigger("resturant");
-                errorSize = Object.keys(errors).length;
-              }}
-              aria-label="Default select example"
-            >
-              <option value="">Resturants </option>
-              <option value="+963">Ahmad </option>
-              <option value="+777">Egypt </option>
-              <option value="+45 ">Jordun</option>
-              <option value="+343">KSA </option>
-              <option value="+111">Qatar </option>
-              <option value="+86 ">Turke </option>
-            </select>
-            {errors.resturant && (
-              <small className="text-danger">{errors.resturant.message}</small>
-            )}
+        <div className="row">
+          <div className="col-7 mx-auto">
+            <div className="input-group input-group-lg mb-1 ms-sm-5">
+              <span
+                className="input-group-text fs-3  filed-icon"
+                id="basic-addon1"
+              >
+                <FontAwesomeIcon icon={faUtensils} />
+              </span>
+              <select
+                className={`form-select  filed ${
+                  errors?.restaurant_id?.[id] && "invalid"
+                }`}
+                {...register(`restaurant_id[${id}]`, {
+                  required: " Resturant  Required",
+                })}
+                onKeyUp={() => {
+                  trigger(`restaurant_id[${id}]`);
+                  errorSize = Object.keys(errors).length;
+                }}
+                aria-label="Default select example"
+              >
+                <option value="">Resturants </option>
+                {allresturants.restaurants.map((resturant) => {
+                  return (
+                    <option value={+resturant.id}>
+                      {" "}
+                      {resturant.name}/ <strong>Category : </strong>{" "}
+                      {resturant.category.name}/ <b>Location : </b>{" "}
+                      {resturant.location}{" "}
+                    </option>
+                  );
+                })}
+              </select>
+              {errors?.restaurant_id?.[id] && (
+                <small className="text-danger">
+                  {errors?.restaurant_id?.[id]?.message}
+                </small>
+              )}
+            </div>
+          </div>
+          <div className="col-5">
+            <div className="input-group input-group-lg  mb-1 ms-sm-5 ">
+              <span className={`input-group-text fs-3 filed filed-icon `}>
+                <FontAwesomeIcon icon={faCalendarDay} />
+              </span>
+              <input
+                type="datetime-local"
+                className={`form-control filed 
+                                      ${
+                                        errors?.restaurant_booking_date?.[id] &&
+                                        "invalid"
+                                      }`}
+                {...register(`restaurant_booking_date[${id}]`, {
+                  required: "Resturant Date is Required",
+                  validate: {
+                    start_data: (value) =>
+                      value >= start_date ||
+                      "Booking Time Should Be Greater Than start_date ",
+                    end_date: (value) =>
+                      value <= end_date ||
+                      "Booking Time Should Be Less Than end_date",
+                  },
+                })}
+                onKeyUp={() => {
+                  trigger(`restaurant_booking_date[${id}]`);
+                }}
+                placeholder="tripData"
+              />
+              {errors?.restaurant_booking_date?.[id] && (
+                <small className="text-danger">
+                  {errors?.restaurant_booking_date?.[id].message}
+                </small>
+              )}
+            </div>
           </div>
         </div>
-        <div className="col-6">
-          <div className="input-group input-group-lg  mb-1 ms-sm-5 ">
-            <span className={`input-group-text fs-3 filed filed-icon `}>
-              <FontAwesomeIcon icon={faCalendarDay} />
-            </span>
-            <input
-              type="datetime-local"
-              className={`form-control filed 
-                                      ${errors.RData && "invalid"}`}
-              {...register("RData", {
-                required: "Resturant Date is Required",
-              })}
-              onKeyUp={() => {
-                trigger("tripData");
-              }}
-              placeholder="tripData"
-            />
-            {errors.RData && (
-              <small className="text-danger">{errors.RData.message}</small>
-            )}
-          </div>
-        </div>
-      </div>
-      <hr className={'col-6 mx-auto'}/>
-
+        <hr className={"col-6 mx-auto"} />
       </>
     );
   };
@@ -197,94 +361,128 @@ let AddPlacesToPackage = () => {
   let AddHotel = ({ id }) => {
     return (
       <>
-      <div className="row">
-        <div className="col-4">
-          <div className="input-group input-group-lg mb-1 ms-sm-5">
-            <span
-              className="input-group-text fs-3  filed-icon"
-              id="basic-addon1"
-            >
-              <FontAwesomeIcon icon={faHotel} />
-            </span>
-            <select
-              className={`form-select  filed ${
-                errors[`hotel-${id}`] && "invalid"
-              }`}
-              {...register(`hotel-${id}`, {
-                required: " Hotel  Required",
-              })}
-              onKeyUp={() => {
-                trigger(`hotel-${id}`);
-                errorSize = Object.keys(errors).length;
-              }}
-              aria-label="Default select example"
-            >
-              <option value="">Hotels </option>
-              <option value="+963">Ahmad </option>
-              <option value="+777">Egypt </option>
-              <option value="+45 ">Jordun</option>
-              <option value="+343">KSA </option>
-              <option value="+111">Qatar </option>
-              <option value="+86 ">Turke </option>
-            </select>
-            {errors[`hotel-${id}`] && (
-              <small className="text-danger">
-                {errors[`hotel-${id}`].message}
-              </small>
-            )}
+        <div className="row">
+          <div className="col-6">
+            <div className="input-group input-group-lg mb-1 ms-sm-5">
+              <span
+                className="input-group-text fs-3  filed-icon"
+                id="basic-addon1"
+              >
+                <FontAwesomeIcon icon={faHotel} />
+              </span>
+              <select
+                className={`form-select  filed ${
+                  errors?.hotel_class_id?.[id] && "invalid"
+                }`}
+                {...register(`hotel_class_id[${id}]`, {
+                  required: " Hotel  Required",
+                })}
+                onKeyUp={() => {
+                  trigger(`hotel_class_id[${id}]`);
+                  errorSize = Object.keys(errors).length;
+                }}
+                aria-label="Default select example"
+              >
+                <option value="">Hotels </option>
+                {allhotel.hotels.map((hotel) => {
+                  return (
+                    <optgroup
+                      label={`${hotel.name} / Location: ${hotel.location} / Rate : ${hotel.rate} Stars `}
+                    >
+                      {hotel.classes.map((aclass) => {
+                        return (
+                          <option value={aclass.id}>
+                            {aclass.class_name} / Price: {aclass.money}{" "}
+                          </option>
+                        );
+                      })}
+                    </optgroup>
+                  );
+                })}
+              </select>
+              {errors?.hotel_class_id?.[id] && (
+                <small className="text-danger">
+                  {errors?.hotel_class_id?.[id].message}
+                </small>
+              )}
+            </div>
+          </div>
+          <div className="col-3">
+            <div className="input-group input-group-lg  mb-1 ms-sm-5 ">
+              <span className={`input-group-text fs-3 filed filed-icon `}>
+                <FontAwesomeIcon icon={faCalendarCheck} />
+              </span>
+              <input
+                type="datetime-local"
+                className={`form-control filed 
+                                      ${
+                                        errors?.hotel_booking_start_date?.[
+                                          id
+                                        ] && "invalid"
+                                      }`}
+                {...register(`hotel_booking_start_date[${id}]`, {
+                  required: "Hotel start Date is Required",
+                    validate: {
+                      start_data: (value) =>
+                        value >= start_date ||
+                        "Booking Time Should Be Greater Than start_date ",
+                      end_date: (value) =>
+                        value <= end_date ||
+                        "Booking Time Should Be Less Than end_date",
+                    },
+                })}
+                onKeyUp={() => {
+                  trigger(`hotel_booking_start_date[${id}]`);
+                }}
+                placeholder="tripData"
+              />
+              {errors?.hotel_booking_start_date?.[id] && (
+                <small className="text-danger">
+                  {errors?.hotel_booking_start_date?.[id].message}
+                </small>
+              )}
+            </div>
+          </div>
+          <div className="col-3">
+            <div className="input-group input-group-lg  mb-1 ms-sm-5 ">
+              <span className={`input-group-text fs-3 filed filed-icon `}>
+                <FontAwesomeIcon icon={faCalendarXmark} />
+              </span>
+              <input
+                type="datetime-local"
+                className={`form-control filed 
+                                      ${
+                                        errors?.hotel_booking_end_date?.[id] &&
+                                        "invalid"
+                                      }`}
+                {...register(`hotel_booking_end_date[${id}]`, {
+                  required: "Hotel End Date is Required",
+                  validate: {
+                    start_data: (value) =>
+                      value >= start_date ||
+                      "Booking Time Should Be Greater Than start_date ",
+                    end_date: (value) =>
+                      value <= end_date ||
+                      "Booking Time Should Be Less Than end_date",
+                      GTEdata:  (value) => 
+                          value > getValues(`hotel_booking_start_date[${id}]`) ||
+                          "End Day Should Be Greater than Enter Day"
+                  },
+                })}
+                onKeyUp={() => {
+                  trigger(`hotel_booking_end_date[${id}]`);
+                }}
+                placeholder="tripData"
+              />
+              {errors?.hotel_booking_end_date?.[id] && (
+                <small className="text-danger">
+                  {errors?.hotel_booking_end_date?.[id].message}
+                </small>
+              )}
+            </div>
           </div>
         </div>
-        <div className="col-4">
-          <div className="input-group input-group-lg  mb-1 ms-sm-5 ">
-            <span className={`input-group-text fs-3 filed filed-icon `}>
-              <FontAwesomeIcon icon={faCalendarCheck} />
-            </span>
-            <input
-              type="datetime-local"
-              className={`form-control filed 
-                                      ${errors[`HDate-${id}`] && "invalid"}`}
-              {...register(`HDate-${id}`, {
-                required: "Resturant Date is Required",
-              })}
-              onKeyUp={() => {
-                trigger(`HDate-${id}`);
-              }}
-              placeholder="tripData"
-            />
-            {errors[`HDate-${id}`] && (
-              <small className="text-danger">
-                {errors[`HDate-${id}`].message}
-              </small>
-            )}
-          </div>
-        </div>
-        <div className="col-4">
-          <div className="input-group input-group-lg  mb-1 ms-sm-5 ">
-            <span className={`input-group-text fs-3 filed filed-icon `}>
-              <FontAwesomeIcon icon={faCalendarXmark} />
-            </span>
-            <input
-              type="datetime-local"
-              className={`form-control filed 
-                                      ${errors[`HDate-${id}`] && "invalid"}`}
-              {...register(`HDate-${id}`, {
-                required: "Resturant Date is Required",
-              })}
-              onKeyUp={() => {
-                trigger(`HDate-${id}`);
-              }}
-              placeholder="tripData"
-            />
-            {errors[`HDate-${id}`] && (
-              <small className="text-danger">
-                {errors[`HDate-${id}`].message}
-              </small>
-            )}
-          </div>
-        </div>
-      </div>
-      <hr className={'col-6 mx-auto'}/>
-
+        <hr className={"col-6 mx-auto"} />
       </>
     );
   };
@@ -298,163 +496,123 @@ let AddPlacesToPackage = () => {
   let AddAirLine = ({ id }) => {
     return (
       <>
-      <div className="row">
-        <div className="col-12">
-          <div className="input-group input-group-lg mb-1 ms-sm-5">
-            <span
-              className="input-group-text fs-3  filed-icon"
-              id="basic-addon1"
-            >
-              <FontAwesomeIcon icon={faPlane} />
-            </span>
-            <select
-              className={`form-select  filed ${
-                errors[`plane-${id}`] && "invalid"
-              }`}
-              {...register(`plane-${id}`, {
-                required: " Plane  Required",
-              })}
-              onKeyUp={() => {
-                trigger(`plane-${id}`);
-                errorSize = Object.keys(errors).length;
-              }}
-              aria-label="Default select example"
-            >
-              <option value="">AirLines</option>
-              <option value="+963">Ahmad </option>
-              <option value="+777">Egypt </option>
-              <option value="+45 ">Jordun</option>
-              <option value="+343">KSA </option>
-              <option value="+111">Qatar </option>
-              <option value="+86 ">Turke </option>
-            </select>
-            {errors[`plane-${id}`] && (
-              <small className="text-danger">
-                {errors[`plane-${id}`].message}
-              </small>
-            )}
+        <div className="row">
+          <div className="col-12">
+            <div className="input-group input-group-lg mb-1 ms-sm-5">
+              <span
+                className="input-group-text fs-3  filed-icon"
+                id="basic-addon1"
+              >
+                <FontAwesomeIcon icon={faPlane} />
+              </span>
+              <select
+                className={`form-select  filed ${
+                  errors?.airplane_class_id?.[id] && "invalid"
+                }`}
+                {...register(`airplane_class_id[${id}]`, {
+                  required: " Plane  Required",
+                })}
+                onKeyUp={() => {
+                  trigger(`airplane_class_id[${id}]`);
+                }}
+                aria-label="Default select example"
+              >
+                <option value="">AirLines</option>
+                {allairplanes.airplane.map((plane) => {
+                  return (
+                    <optgroup
+                      label={`${plane.name} / Location: ${plane.location} / Rate : ${plane.rate} Stars `}
+                    >
+                      {plane.classes.map((aclass) => {
+                        return (
+                          <option value={aclass.id}>
+                            {aclass.class_name} / Price: {aclass.money}{" "}
+                          </option>
+                        );
+                      })}
+                    </optgroup>
+                  );
+                })}
+              </select>
+              {errors?.airplane_class_id?.[id] && (
+                <small className="text-danger">
+                  {errors?.airplane_class_id?.[id].message}
+                </small>
+              )}
+            </div>
           </div>
-        </div>
-        <div className="col-12">
+          <div className="col-12">
+            <div className="input-group input-group-lg  mb-1 ms-sm-5 ">
+              <span className={`input-group-text fs-3 filed filed-icon `}>
+                <FontAwesomeIcon icon={faCalendarCheck} />
+              </span>
+              <input
+                type="datetime-local"
+                className={`form-control filed 
+                                      ${
+                                        errors?.airplane_booking_date?.[id] &&
+                                        "invalid"
+                                      }`}
+                {...register(`airplane_booking_date[${id}]`, {
+                  required: "AirLine Date is Required",
+                  validate: {
+                    start_data: (value) =>
+                      value >= start_date ||
+                      "Booking Time Should Be Greater Than start_date ",
+                    end_date: (value) =>
+                      value <= end_date ||
+                      "Booking Time Should Be Less Than end_date",
+                  },
+                })}
+                onKeyUp={() => {
+                  trigger(`airplane_booking_date[${id}]`);
+                }}
+                placeholder="tripData"
+              />
+              {errors?.airplane_booking_date?.[id] && (
+                <small className="text-danger">
+                  {errors?.airplane_booking_date?.[id].message}
+                </small>
+              )}
+            </div>
+          </div>
           <div className="input-group input-group-lg  mb-1 ms-sm-5 ">
             <span className={`input-group-text fs-3 filed filed-icon `}>
-              <FontAwesomeIcon icon={faCalendarCheck} />
+              <FontAwesomeIcon icon={faPlaneDeparture} />
             </span>
             <input
-              type="datetime-local"
-              className={`form-control filed 
-                                      ${errors[`PDate-${id}`] && "invalid"}`}
-              {...register(`PDate-${id}`, {
-                required: "AirLine Date is Required",
+              class={`form-control filed ${errors?.from?.[id] && "invalid"}`}
+              type="text"
+              {...register(`from[${id}]`, {
+                required: "The AirPort is Required",
               })}
-              onKeyUp={() => {
-                trigger(`PDate-${id}`);
-              }}
-              placeholder="tripData"
+              placeholder={"Enter The Airport | City"}
             />
-            {errors[`PDate-${id}`] && (
-              <small className="text-danger">
-                {errors[`PDate-${id}`].message}
+            {errors?.from?.[id] && (
+              <small className="text-danger text-end">
+                {errors?.from?.[id].message}
+              </small>
+            )}
+
+            <span class="input-group-text  fs-3 filed-icon ">
+              <FontAwesomeIcon icon={faPlaneArrival} />
+            </span>
+            <input
+              type="text"
+              className={`form-control filed ${errors?.to?.[id] && "invalid"}`}
+              {...register(`to[${id}]`, {
+                required: "The AirPort is Required",
+              })}
+              placeholder={"Enter The Airport | City"}
+            />
+            {errors?.to?.[id] && (
+              <small className="text-danger text-end">
+                {errors?.to?.[id].message}
               </small>
             )}
           </div>
         </div>
-        <div className="input-group input-group-lg  mb-1 ms-sm-5 ">
-          <span className={`input-group-text fs-3 filed filed-icon `}>
-            <FontAwesomeIcon icon={faPlaneDeparture} />
-          </span>
-          <input
-            class="form-control filed"
-            type="text"
-            placeholder={"Enter The Airport | City"}
-          />
-          <span class="input-group-text  fs-3 filed-icon ">
-            <FontAwesomeIcon icon={faPlaneArrival} />
-          </span>
-          <input
-            type="number"
-            className={`form-control filed ${errors.discount && "invalid"}`}
-            {...register("discount", {
-              required: "Discount is Required",
-              min: {
-                value: 5,
-                message: "Minimum  Discount value is 5 %",
-              },
-              max: {
-                value: 25,
-                message: "Maximum  Discount value is 20 %",
-              },
-            })}
-            placeholder={"Enter The Airport | City"}
-            aria-label="discount"
-          ></input>
-          {errors.discount && (
-            <small className="text-danger text-end">
-              {errors.discount.message}
-            </small>
-          )}
-        </div>
-        <div className="col-12">
-          <div className="input-group input-group-lg  mb-1 ms-sm-5 ">
-            <span className={`input-group-text fs-3 filed filed-icon `}>
-              <FontAwesomeIcon icon={faCalendarXmark} />
-            </span>
-            <input
-              type="datetime-local"
-              className={`form-control filed 
-                                      ${errors[`PDate-${id}`] && "invalid"}`}
-              {...register(`PDate-${id}`, {
-                required: "AirLine Date is Required",
-              })}
-              onKeyUp={() => {
-                trigger(`PDate-${id}`);
-              }}
-              placeholder="tripData"
-            />
-            {errors[`PDate-${id}`] && (
-              <small className="text-danger">
-                {errors[`PDate-${id}`].message}
-              </small>
-            )}
-          </div>
-        </div>
-        <div className="input-group input-group-lg  mb-1 ms-sm-5 ">
-          <span className={`input-group-text fs-3 filed filed-icon `}>
-            <FontAwesomeIcon icon={faPlaneDeparture} />
-          </span>
-          <input
-            class="form-control filed"
-            type="text"
-            placeholder={"Enter The Airport | City"}
-          />
-          <span class="input-group-text  fs-3 filed-icon ">
-            <FontAwesomeIcon icon={faPlaneArrival} />
-          </span>
-          <input
-            type="number"
-            className={`form-control filed ${errors.discount && "invalid"}`}
-            {...register("discount", {
-              required: "Discount is Required",
-              min: {
-                value: 5,
-                message: "Minimum  Discount value is 5 %",
-              },
-              max: {
-                value: 25,
-                message: "Maximum  Discount value is 20 %",
-              },
-            })}
-            placeholder={"Enter The Airport | City"}
-            aria-label="discount"
-          ></input>
-          {errors.discount && (
-            <small className="text-danger text-end">
-              {errors.discount.message}
-            </small>
-          )}
-        </div>
-      </div>
-      <hr className={'col-6 mx-auto'}/>
+        <hr className={"col-6 mx-auto"} />
       </>
     );
   };
@@ -485,7 +643,7 @@ let AddPlacesToPackage = () => {
           </span>
         </div>
         <RenderNaturalPlace />
-        <hr className={'hr col-12 ms-5'}/>
+        <hr className={"hr col-12 ms-5"} />
         <div className="natural-box">
           <h2 className={"me-3 sub-title"}>Resturants</h2>
           <span className={`fs-3  n-icon plus`}>
@@ -510,7 +668,7 @@ let AddPlacesToPackage = () => {
           </span>
         </div>
         <RenderResturants />
-        <hr className={'hr col-12 ms-5'}/>
+        <hr className={"hr col-12 ms-5"} />
         <div className="natural-box">
           <h2 className={"me-3 sub-title"}>Hotels</h2>
           <span className={`fs-3  n-icon plus`}>
@@ -535,7 +693,7 @@ let AddPlacesToPackage = () => {
           </span>
         </div>
         <RenderHotels />
-        <hr className={ 'hr col-12 ms-5'}/>
+        <hr className={"hr col-12 ms-5"} />
         <div className="natural-box">
           <h2 className={"me-3 sub-title"}>AirLines</h2>
           <span className={`fs-3  n-icon plus`}>
@@ -560,53 +718,8 @@ let AddPlacesToPackage = () => {
           </span>
         </div>
         <RenderAirLines />
-        <hr className={'hr col-12 ms-5'}/>
-        <div className="col-10 offset-1 ">
-          <div className=" price-title text-center">
-            Total Price Of The trip per person
-          </div>
-          <div className="input-group input-group-lg  mb-1 ms-sm-5 ">
-            <span className={`input-group-text fs-3 filed filed-icon `}>
-              <FontAwesomeIcon icon={faMoneyBill} />
-            </span>
-            <input
-              class="form-control filed"
-              type="text"
-              value="100$"
-              aria-label="readonly input example"
-              readonly
-            />
-            <span class="input-group-text filed-icon discount">
-              Discount <br /> value{" "}
-            </span>
-            <input
-              type="number"
-              className={`form-control filed ${errors.discount && "invalid"}`}
-              {...register("discount", {
-                required: "Discount is Required",
-                min: {
-                  value: 5,
-                  message: "Minimum  Discount value is 5 %",
-                },
-                max: {
-                  value: 25,
-                  message: "Maximum  Discount value is 20 %",
-                },
-              })}
-              placeholder="From 5% to 20%"
-              aria-label="discount"
-            ></input>
-            <span class="input-group-text filed-icon">
-              {" "}
-              <FontAwesomeIcon icon={faPercentage} />
-            </span>
-            {errors.discount && (
-              <small className="text-danger text-end">
-                {errors.discount.message}
-              </small>
-            )}
-          </div>
-        </div>
+        <hr className={"hr col-12 ms-5"} />
+        <div className="col-10 offset-1 "></div>
         <div className="ReCAPTCHA-div offset-sm-1 mt-1 col-8   ">
           <ReCAPTCHA notArobot={notArobot} setnotArobot={setnotArobot} />
         </div>
@@ -618,9 +731,12 @@ let AddPlacesToPackage = () => {
       </form>
     </>
   );
- };
-
+};
 let AddPackage = () => {
+  let s1 = new Date("2020-7-20");
+  let s2 = new Date("2020/7/21").toISOString();
+  console.log(s2, " ", s1);
+
   const navigate = useNavigate();
   const [errMsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
@@ -628,7 +744,19 @@ let AddPackage = () => {
   const [notArobot, setnotArobot] = useState(false);
   const [isloading, setIsLooading] = useState(false);
   const [addPackageStep, setaddPackageStep] = useState(1);
-
+  const [packageInfo, setpackageInfo] = useState();
+  const [flag, setflag] = useState(false);
+  const {
+    data: allCategories,
+    fetchError: allCategoriesErrors,
+    isLoading: allCategoriesIsLoading,
+  } = useAxiosGet("/api/getPackageCategory");
+  const {
+    data: allsuper,
+    fetchError: allsuperErrors,
+    isLoading: allsuperIsLoading,
+  } = useAxiosGet("/api/getTouristSupervisor");
+  // console.log(+allCategories.category[4].id);
   const {
     register,
     handleSubmit,
@@ -638,30 +766,44 @@ let AddPackage = () => {
   } = useForm();
   const OnSubmit = async ({
     name,
-    email,
-    country,
-    phone,
-    password,
-    c_password,
+    description,
+    img,
+    start_date,
+    number_of_day,
+    discount_percentage,
+    max_reservation,
+    tourist_supervisor,
+    category,
   }) => {
+    var s = new Date(start_date)
+      .toISOString()
+      .slice(0, 19)
+      .split("T")
+      .join(" ");
+    console.log(s);
+    const formdata = new FormData();
+    formdata.append("img", img);
+    formdata.append("name", name);
+    formdata.append("start_date", s);
+    formdata.append("category_id", category);
+    formdata.append("discount_percentage", discount_percentage);
+    formdata.append("description", description);
+    formdata.append("number_of_day", number_of_day);
+    formdata.append("max_reservation", max_reservation);
+    formdata.append("tourist_supervisor_id", tourist_supervisor);
     setIsLooading(true);
     try {
-      const response = await axios.post(
-        "/api/register",
-        JSON.stringify({
-          name,
-          email,
-          password,
-          c_password,
-          phone: phone + country,
-        }),
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
+      const response = await axios.post("/api/addPackage", formdata, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.atoken}`,
+        },
+        withCredentials: true,
+        mode: "no-cros",
+      });
       console.log(response.data);
-
+      setpackageInfo(response.data.package);
+      setaddPackageStep(2);
       setIsLooading(false);
       setSuccess(true);
     } catch (err) {
@@ -684,9 +826,6 @@ let AddPackage = () => {
       }
     }
   };
-
-  let errorSize = Object.keys(errors).length;
-  console.log(errorSize);
   return (
     <>
       <div className="container addPackage">
@@ -713,7 +852,7 @@ let AddPackage = () => {
                   <label for="poster" class="form-label poster-label offset-2">
                     Package Poster
                   </label>
-                  <div className="col-4 pe-2">
+                  <div className="col-5 pe-2">
                     <div className="input-group input-group-lg  mb-1 ms-sm-5 ">
                       <span
                         className={`input-group-text fs-3 filed filed-icon `}
@@ -726,21 +865,21 @@ let AddPackage = () => {
                         accept={"image/*"}
                         alt={"Poster"}
                         className={`form-control filed 
-                                      ${errors.image && "invalid"}`}
-                        {...register("image")}
+                                      ${errors.img && "invalid"}`}
+                        {...register("img")}
                         onKeyUp={() => {
-                          trigger("image");
+                          trigger("img");
                         }}
                         placeholder="Package Poster"
                       />
-                      {errors.image && (
+                      {errors.img && (
                         <small className="text-danger">
-                          {errors.image.message}
+                          {errors.img.message}
                         </small>
                       )}
                     </div>
                   </div>
-                  <div className="col-5">
+                  <div className="col-6">
                     <div className="input-group input-group-lg  mb-1 ms-sm-5 ">
                       <span
                         className={`input-group-text fs-3 filed filed-icon `}
@@ -774,61 +913,6 @@ let AddPackage = () => {
                       )}
                     </div>
                   </div>
-                  <div className="col-3">
-                    <div className="input-group input-group-lg  mb-1 ms-sm-5 ">
-                      <span
-                        className={`input-group-text fs-3 filed filed-icon `}
-                      >
-                        <FontAwesomeIcon icon={faPeopleGroup} />
-                      </span>
-                      <input
-                        type="number"
-                        className={`form-control filed 
-                                      ${errors.number && "invalid"}`}
-                        {...register("number", {
-                          required: "Person Number is Required",
-                          min: {
-                            value: 10,
-                            message: "Minimum Required Person is 10",
-                          },
-                          max: {
-                            value: 200,
-                            message: "Maximum  Required Person is 200 ",
-                          },
-                        })}
-                        onKeyUp={() => {
-                          trigger("number");
-                        }}
-                        placeholder="Num of Persons "
-                      />
-                      {errors.number && (
-                        <small className="text-danger">
-                          {errors.number.message}
-                        </small>
-                      )}
-                    </div>
-                  </div>
-                  <div className="col-12">
-                    <div className="input-group input-group-lg  mb-1 ms-sm-5 ">
-                      <textarea
-                        type="text"
-                        className={`form-control filed 
-                                      ${errors.desc && "invalid"}`}
-                        {...register("desc", {
-                          required: "Description is Required",
-                        })}
-                        onKeyUp={() => {
-                          trigger("desc");
-                        }}
-                        placeholder="Package Description"
-                      />
-                      {errors.desc && (
-                        <small className="text-danger">
-                          {errors.desc.message}
-                        </small>
-                      )}
-                    </div>
-                  </div>
                   <div className="col-4">
                     <div className="input-group input-group-lg  mb-1 ms-sm-5 ">
                       <span
@@ -839,18 +923,18 @@ let AddPackage = () => {
                       <input
                         type="datetime-local"
                         className={`form-control filed 
-                                      ${errors.tripData && "invalid"}`}
-                        {...register("tripData", {
+                                      ${errors.start_date && "invalid"}`}
+                        {...register("start_date", {
                           required: "Trip Date is Required",
                         })}
                         onKeyUp={() => {
-                          trigger("tripData");
+                          trigger("start_date");
                         }}
-                        placeholder="tripData"
+                        placeholder="start_date"
                       />
-                      {errors.days && (
+                      {errors.start_date && (
                         <small className="text-danger">
-                          {errors.tripData.message}
+                          {errors.start_date.message}
                         </small>
                       )}
                     </div>
@@ -865,8 +949,8 @@ let AddPackage = () => {
                       <input
                         type="number"
                         className={`form-control filed 
-                                      ${errors.days && "invalid"}`}
-                        {...register("days", {
+                                      ${errors.number_of_day && "invalid"}`}
+                        {...register("number_of_day", {
                           required: "Days Number is Required",
                           min: {
                             value: 1,
@@ -878,18 +962,18 @@ let AddPackage = () => {
                           },
                         })}
                         onKeyUp={() => {
-                          trigger("days");
+                          trigger("number_of_day");
                         }}
                         placeholder="Days"
                       />
-                      {errors.days && (
+                      {errors.number_of_day && (
                         <small className="text-danger">
-                          {errors.days.message}
+                          {errors.number_of_day.message}
                         </small>
                       )}
                     </div>
                   </div>
-                  <div className="col-6">
+                  <div className="col-5">
                     <div className="input-group input-group-lg mb-1 ms-sm-5">
                       <span
                         className="input-group-text fs-3  filed-icon"
@@ -899,54 +983,159 @@ let AddPackage = () => {
                       </span>
                       <select
                         className={`form-select  filed ${
-                          errors.tour && "invalid"
+                          errors?.tourist_supervisor && "invalid"
                         }`}
-                        {...register("tour", {
+                        {...register("tourist_supervisor", {
                           required:
                             "Tourist guide and his/her Phone is Required",
                         })}
                         onKeyUp={() => {
-                          trigger("tour");
-                          errorSize = Object.keys(errors).length;
-                          // seterrorSize ( Object.keys(errors).length)
-                        }}
-                        onKeyDown={() => {
-                          // trigger("name");
-                          errorSize = Object.keys(errors).length;
+                          trigger("tourist_supervisor");
                           // seterrorSize ( Object.keys(errors).length)
                         }}
                         aria-label="Default select example"
                       >
                         <option value="">Tourist Guide </option>
-                        <option value="+963">Ahmad </option>
-                        <option value="+777">Egypt </option>
-                        <option value="+45 ">Jordun</option>
-                        <option value="+343">KSA </option>
-                        <option value="+111">Qatar </option>
-                        <option value="+86 ">Turke </option>
+                        {allsuper?.TouristSupervisor?.map((superr) => {
+                          return (
+                            <option value={+superr.id}>
+                              {superr.name} , Phone : {superr.phone} , Location
+                              : {superr.location}
+                            </option>
+                          );
+                        })}
                       </select>
-                      <input
-                        type="tel"
-                        className={`form-control tel filed ${
-                          errors.phone && "invalid"
+                      {errors.tourist_supervisor && (
+                        <small className="text-danger">
+                          {errors.tourist_supervisor?.message}
+                        </small>
+                      )}
+                    </div>
+                  </div>
+                  <div className="col-3">
+                    <div className="input-group input-group-lg mb-1 ms-sm-5">
+                      <span
+                        className="input-group-text fs-3  filed-icon"
+                        id="basic-addon1"
+                      >
+                        <FontAwesomeIcon icon={faMartiniGlassCitrus} />
+                      </span>
+
+                      <select
+                        className={`form-select  filed fs-6 ${
+                          errors.category && "invalid"
                         }`}
-                        {...register("phone", {
-                          required: "Phone is Required",
-                          pattern: {
-                            value:
-                              /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{2})[-. )]*(\d{2})[-. ]*(\d{2})(?: *x(\d+))?\s*$/,
-                            message: "Invalid phone no",
+                        {...register("category", {
+                          required: "Ctegory Is Required",
+                        })}
+                        onKeyUp={() => {
+                          trigger("category");
+                        }}
+                        aria-label="Default select example"
+                      >
+                        <option value="">Category</option>
+                        {allCategories?.category?.map((cat) => {
+                          return (
+                            <option value={+`${cat.id}`}>{cat.name}</option>
+                          );
+                        })}
+                      </select>
+                      {errors.category && (
+                        <small className="text-danger">
+                          {errors.category.message}
+                        </small>
+                      )}
+                    </div>
+                  </div>
+                  <div className="col-3">
+                    <div className="input-group input-group-lg   mb-1 ms-sm-5 ">
+                      <span
+                        className={`input-group-text fs-3 filed filed-icon `}
+                      >
+                        <FontAwesomeIcon icon={faPeopleGroup} />
+                      </span>
+                      <input
+                        type="number"
+                        className={`form-control filed  fs-6 
+                                      ${errors.max_reservation && "invalid"}`}
+                        {...register("max_reservation", {
+                          required: "Person Number is Required",
+                          min: {
+                            value: 10,
+                            message: "Minimum Required Person is 10",
+                          },
+                          max: {
+                            value: 200,
+                            message: "Maximum  Required Person is 200 ",
                           },
                         })}
                         onKeyUp={() => {
-                          trigger("phone");
+                          trigger("max_reservation");
                         }}
-                        // }}
-                        placeholder="Phone"
+                        placeholder="Persons Number"
                       />
-                      {(errors.phone || errors.tour) && (
+                      {errors.max_reservation && (
                         <small className="text-danger">
-                          {errors.tour.message}
+                          {errors.max_reservation.message}
+                        </small>
+                      )}
+                    </div>
+                  </div>
+                  <div className="col-5">
+                    <div className="input-group input-group-lg  mb-1 ms-sm-5 ">
+                      <span
+                        className={`input-group-text fs-3 filed filed-icon `}
+                      >
+                        <FontAwesomeIcon icon={faMoneyBill} />
+                      </span>
+                      <input
+                        type="number"
+                        className={`form-control filed fs-6 ${
+                          errors.discount_percentage && "invalid"
+                        }`}
+                        {...register(`discount_percentage`, {
+                          required: "Discount is Required",
+                          min: {
+                            value: 5,
+                            message: "Minimum  Discount value is 5 %",
+                          },
+                          max: {
+                            value: 25,
+                            message: "Maximum  Discount value is 20 %",
+                          },
+                        })}
+                        placeholder="Discount Value ( From 5% to 25% )"
+                        aria-label="discount"
+                      ></input>
+                      <span class="input-group-text filed-icon">
+                        {" "}
+                        <FontAwesomeIcon icon={faPercentage} />
+                      </span>
+                      {errors.discount_percentage && (
+                        <small className="text-danger text-end">
+                          {errors.discount_percentage.message}
+                        </small>
+                      )}
+                    </div>
+                  </div>
+                  <div className="col-11">
+                    <div className="input-group input-group-lg  mb-1 ms-sm-5 ">
+                      <textarea
+                        type="text"
+                        rows={1}
+                        className={`form-control filed 
+                                      ${errors.description && "invalid"}`}
+                        {...register("description", {
+                          required: "Description is Required",
+                        })}
+                        onKeyUp={() => {
+                          trigger("description");
+                        }}
+                        placeholder="Package Description"
+                      />
+                      {errors.description && (
+                        <small className="text-danger">
+                          {errors.description.message}
                         </small>
                       )}
                     </div>
@@ -954,7 +1143,13 @@ let AddPackage = () => {
                 </div>
               </div>
               <div className="div-icon col-11   ">
-                <button className="one-icon" type="submit" onClick={() => {setaddPackageStep(2)}}>
+                <button
+                  className="one-icon"
+                  type="submit"
+                  // onClick={() => {
+                  //   setaddPackageStep(2);
+                  // }}
+                >
                   Next
                 </button>
               </div>
@@ -962,10 +1157,11 @@ let AddPackage = () => {
           </>
         ) : addPackageStep === 2 ? (
           <>
-          <AddPlacesToPackage/>
+            <AddPlacesToPackage packageInfo={packageInfo} />
           </>
-        ):(<>
-        </>)}
+        ) : (
+          <></>
+        )}
       </div>
     </>
   );

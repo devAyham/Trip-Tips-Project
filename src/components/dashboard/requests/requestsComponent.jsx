@@ -866,7 +866,7 @@ let NatuarlPlaces = ({ allNaturalPlaces, flag, setflag, isinloading }) => {
                         data-bs-toggle="modal"
                         data-bs-target={`#restImages-${naturalplace.id}`}
                         className={""}
-                        src={baseURl + img.img}
+                        src={baseURl+'/default_photo/place/AL40mountain/40.jpg'}
                         alt={".."}
                       />
                     </div>

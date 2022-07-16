@@ -12307,8 +12307,8 @@ textarea.form-control-lg {
   color: #00243f;
 }
 .addPackage .hr {
-  color: #00243f !important;
-  opacity: 1;
+  color: #264b77 !important;
+  opacity: 0.7;
 }
 
 .dashborad-requests {

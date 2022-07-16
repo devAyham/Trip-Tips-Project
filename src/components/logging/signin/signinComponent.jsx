@@ -57,20 +57,59 @@ let Signin = ({user,setUser}) => {
               }
           );
           console.log(response.data);
-          const aid = response?.data?.user.id;
-          const aname = response?.data?.user.name;
-          const aemail = response?.data?.user.email;
-          const arole = response?.data?.user?.role?.role_person_id;
-          const arolename = response?.data?.user?.role?.role_person_name;
+          console.log(response.data);
           const atoken = response?.data?.token;
-          const aphone = response?.data?.user.phone;
-          const aimg = response?.data?.user.img;
-          const alevel = response?.data?.user.level;
-          const ablocked = response?.data?.user.is_active;
-          const ais_registerd = response?.data?.user.is_registered;
-          const ais_verifay = response?.data?.user.is_verifaied;
-          setAuth({ aid, aname,aemail, arole,arolename, atoken,aphone,aimg,alevel,ais_verifay,ablocked,ais_registerd});
-          console.log(aid, aname,aemail, arole,arolename, atoken,aphone,aimg,alevel,ais_verifay,ablocked,ais_registerd);
+          const aid = response?.data?.user?.id;
+          const aname = response?.data?.user?.name;
+          const aemail = response?.data?.user?.email;
+          const aphone = response?.data?.user?.phone;
+          const alevel = response?.data?.user?.level;
+          const aimg = response?.data?.user?.img;
+          const ais_verifay = response?.data?.user?.is_verifaied;
+          const ais_registerd = response?.data?.user?.is_registered;
+          const ablocked = response?.data?.user?.is_active;
+          const ahave_places = response?.data?.user?.have_facilities;
+          const arole = response?.data?.user?.role_person_id;
+          const arolename = response?.data?.user?.role_peson_name;
+          const arestaurant_role = response?.data?.user?.restaurant_role;
+          const ahotel_role = response?.data?.user?.hotel_role;
+          const aairplane_role = response?.data?.user?.airplane_role;
+          setAuth({
+            aid,
+            aname,
+            aemail,
+            arole,
+            arolename,
+            atoken,
+            aphone,
+            aimg,
+            alevel,
+            ais_verifay,
+            ablocked,
+            ais_registerd,
+            ahave_places,
+            arestaurant_role,
+            ahotel_role,
+            aairplane_role
+          });
+          console.log(
+            aid,
+            aname,
+            aemail,
+            arole,
+            arolename,
+            atoken,
+            aphone,
+            aimg,
+            alevel,
+            ais_verifay,
+            ablocked,
+            ais_registerd,
+            ahave_places,
+            arestaurant_role,
+            ahotel_role,
+            aairplane_role
+          );
           setIsLooading(false);
           if(ais_registerd === 0){
             setErrMsg(`Hi plase Set A new Password to your acount so you can log in normaly in future `);
@@ -121,17 +160,58 @@ let Signin = ({user,setUser}) => {
             }
         );
         console.log(response.data);
-        const aname = response?.data?.user.name;
-        const aemail = response?.data?.user.email;
-        const arole = response?.data?.user?.role_person_id;
-        const arolename = response?.data?.user?.role_person_name;
         const atoken = response?.data?.token;
-        const aphone = response?.data?.user.phone;
-        const aimg = response?.data?.user.img;
-        const alevel = response?.data?.user.level;
-        const ais_verifay = response?.data?.user.is_verifaied;
-        setAuth({ aname,aemail, arole,arolename, atoken,aphone,aimg,alevel,ais_verifay});
-        console.log(aname,aemail, arole,arolename, atoken,aphone,aimg,alevel,ais_verifay);
+        const aid = response?.data?.user?.id;
+        const aname = response?.data?.user?.name;
+        const aemail = response?.data?.user?.email;
+        const aphone = response?.data?.user?.phone;
+        const alevel = response?.data?.user?.level;
+        const aimg = response?.data?.user?.img;
+        const ais_verifay = response?.data?.user?.is_verifaied;
+        const ais_registerd = response?.data?.user?.is_registered;
+        const ablocked = response?.data?.user?.is_active;
+        const ahave_places = response?.data?.user?.have_facilities;
+        const arole = response?.data?.user?.role_person_id;
+        const arolename = response?.data?.user?.role_peson_name;
+        const arestaurant_role = response?.data?.user?.restaurant_role;
+        const ahotel_role = response?.data?.user?.hotel_role;
+        const aairplane_role = response?.data?.user?.airplane_role;
+        setAuth({
+          aid,
+          aname,
+          aemail,
+          arole,
+          arolename,
+          atoken,
+          aphone,
+          aimg,
+          alevel,
+          ais_verifay,
+          ablocked,
+          ais_registerd,
+          ahave_places,
+          arestaurant_role,
+          ahotel_role,
+          aairplane_role
+        });
+        console.log(
+          aid,
+          aname,
+          aemail,
+          arole,
+          arolename,
+          atoken,
+          aphone,
+          aimg,
+          alevel,
+          ais_verifay,
+          ablocked,
+          ais_registerd,
+          ahave_places,
+          arestaurant_role,
+          ahotel_role,
+          aairplane_role
+        );
         setIsLooading(false);
         if(ais_verifay === 0){
           setErrMsg(`sorry but It looks you have not verify your email yat`);
