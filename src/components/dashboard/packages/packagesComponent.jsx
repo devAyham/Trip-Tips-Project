@@ -3,25 +3,53 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { defaults } from "chart.js";
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { baseURl } from "../../../api/baseURL";
+import { useAxiosGet } from "../../../hooks/useAxiosFetch";
 
-let PackagesList = () => {
+let PackagesList = ({ packagee }) => {
   let [accordionToggle, setaccordionToggle] = useState(false);
+  // console.log(packagee);
   return (
     <>
       <div class=" card-config col-10 col-sm-5 col-md-4 col-lg-3 col-xl-2 ">
         <div className="imge-box">
-          <img src={"/imges/lightnight.png"} alt={"..."} />
+          <img src={baseURl + packagee.img} alt={"..."} />
         </div>
         <div className="text-box">
-          <div className="title">Bla Bla Bla</div>
-          <div className="desc">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi
-            totam omnis provident, ipsum similique modi facere est, deleniti
+          <div className="title">{packagee.name}</div>
+          <div className="desc">{packagee.description}</div>
+          <hr />
+          <div className="category">
+            <span className={"spene"}>Category :</span>{" "}
+            {packagee.category?.name}{" "}
           </div>
           <hr />
-          <div className="admin">By: Ayham Hammami</div>
+          <div className="reser">
+            <span className={"spene"}>Reservation :</span>{" "}
+            {packagee.number_of_reservation}/{packagee.max_reservation}{" "}
+          </div>
           <hr />
-          <div className="price">1000 $</div>
+          <div className="start">
+            <span className={"spene"}>Start At :</span>{" "}
+            {packagee.start_date.split(" ")[0]}
+          </div>
+          <hr />
+          <div className="end">
+            <span className={"spene"}>End At :</span>{" "}
+            {packagee.end_date.split(" ")[0]}{" "}
+          </div>
+          <hr />
+          <div className="admin">
+            <span className={"spene"}> By :</span> {packagee.added_by}
+          </div>
+          <div className="price position-relative my-2">
+            <span class="position-absolute  translate-middle fs-7 badge rounded-pill bg-danger">
+              {packagee.discount_percentage}%<sup>off</sup>
+              <span class="visually-hidden">unread messages</span>
+            </span>
+            {packagee.price} ${" "}
+          </div>
+          {/* <hr /> */}
           <hr />
           <div className="more">
             <div class="accordion accordion-flush" id="accordionFlushExample">
@@ -32,10 +60,8 @@ let PackagesList = () => {
                       !accordionToggle && "collapsed"
                     }`}
                     type="button"
-                    // data-bs-toggle='collapse'
                     data-bs-target="#flush-collapseOne"
                     aria-expanded="false"
-                    // aria-controls="flush-collapseOne"
                     onClick={() => {
                       setaccordionToggle(!accordionToggle);
                     }}
@@ -51,10 +77,90 @@ let PackagesList = () => {
                   aria-labelledby="flush-headingOne"
                   data-bs-parent="#accordionFlushExample"
                 >
-                  <div class="accordion-body">
-                    Placeholder content for this accordion, which is intended to
-                    demonstrate the <code>.accordion-flush</code> class. This is
-                    the first item's accordion body.
+                  <div class="accordion-body  ">
+                    <code>Tourist Guide Name :</code>{" "}
+                    <div>{packagee.touris_supervisor.name}</div>
+                    <code>Tourist Guide Phone :</code>{" "}
+                    <div>{packagee.touris_supervisor.phone}</div>
+                    <code
+                      className={
+                        packagee?.package_restaurant?.length === 0 && "d-none"
+                      }
+                    >
+                      Resturants :
+                    </code>
+                    {packagee.package_restaurant?.map((resturant) => {
+                      return (
+                        <>
+                          <div>Name: {resturant?.restaurant_name}</div>
+                          <div>
+                            Booking Date: {resturant?.restaurant_booking_date}
+                          </div>
+                          <hr className={'w-50'}/>
+                        </>
+                      );
+                    })}
+                    <code
+                      className={
+                        packagee?.package_hotel.length === 0 && "d-none"
+                      }
+                    >
+                      Hotels :
+                    </code>
+                    {packagee.package_hotel?.map((hotel) => {
+                      return (
+                        <>
+                          <div>Name : {hotel?.hotel_name}</div>
+                          <div>Class : {hotel?.hotel_class_name}</div>
+                          <div>
+                            Booking Start Date :{" "}
+                            {hotel?.hotel_booking_start_date}
+                          </div>
+                          <div>
+                            Booking End Date : {hotel?.hotel_booking_end_date}
+                          </div>
+                          <hr className={'w-50'}/>
+                        </>
+                      );
+                    })}
+                    <code
+                      className={
+                        packagee?.package_airplane.length === 0 && "d-none"
+                      }
+                    >
+                      AirPlanes :
+                    </code>
+                    {packagee.package_airplane?.map((airplane) => {
+                      return (
+                        <>
+                          <div>Name: {airplane?.airplane_name}</div>
+                          <div>Class: {airplane?.airplane_class_id}</div>
+                          <div>Booking Date: {airplane?.airplane_booking_date}</div>
+                          <div>From: {airplane?.from}</div>
+                          <div>To : {airplane?.to}</div>
+                          <hr className={'w-50'}/>
+                        </>
+
+                      );
+                    })}
+                    <code
+                      className={
+                        packagee?.package_place.length === 0 && "d-none"
+                      }
+                    >
+                      Natural Places :
+                    </code>
+                    {packagee.package_place?.map((place) => {
+                      return (
+                        <>
+                          <div>Name: {place?.place_name}</div>
+                          <div>
+                            Booking Date: {place?.place_booking}
+                          </div>
+                          <hr className={'w-50'}/>
+                        </>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -65,8 +171,13 @@ let PackagesList = () => {
     </>
   );
 };
-
 let Packages = () => {
+  const {
+    data: allpackages,
+    fetchError: allpackagesErrors,
+    isLoading: allpackagesIsLoading,
+  } = useAxiosGet("/api/get_Packages");
+  console.log(allpackages.package);
   return (
     <>
       <div className="container dashboard-packages">
@@ -84,28 +195,25 @@ let Packages = () => {
             </nav>
           </div>
           <div class="d-grid gap-2 col-6 mx-auto ">
-            <NavLink className={'addpackageButton'} to={"/dashboard/packages/addpackage"}>
+            <NavLink
+              className={"addpackageButton"}
+              to={"/dashboard/packages/addpackage"}
+            >
               <button class="btn btn-primary addpackageButton" type="button">
-                <FontAwesomeIcon className="icon" icon={faCirclePlus} size={"2x"} />
+                <FontAwesomeIcon
+                  className="icon"
+                  icon={faCirclePlus}
+                  size={"2x"}
+                />
                 <div className="text">Create New Package</div>
               </button>
             </NavLink>
           </div>
         </div>
         <div className="row pakagesList  ">
-          <PackagesList />
-          <PackagesList />
-          <PackagesList />
-          <PackagesList />
-          <PackagesList />
-          <PackagesList />
-          <PackagesList />
-          <PackagesList />
-          <PackagesList />
-          <PackagesList />
-          <PackagesList />
-          <PackagesList />
-          <PackagesList />
+          {allpackages?.package?.map((packg) => {
+            return <PackagesList packagee={packg} />;
+          })}
         </div>
       </div>
     </>

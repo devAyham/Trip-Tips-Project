@@ -27,6 +27,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import axios from "../../api/axios";
 import AuthContext from "../../context/AuthProvider";
+import { useAxiosGet } from "../../hooks/useAxiosFetch";
 
 let TermsModal = ({ seeTerms, setseeTerms }) => {
   return (
@@ -152,7 +153,6 @@ let TermsModal = ({ seeTerms, setseeTerms }) => {
     </>
   );
 };
-
 let AddResturant = () => {
   const navigate = useNavigate();
   const [errMsg, setErrMsg] = useState("");
@@ -162,6 +162,12 @@ let AddResturant = () => {
   const [isloading, setIsLooading] = useState(false);
   const [imageFiledsNumb, setimageFiledsNumb] = useState(1);
   const [seeTerms, setseeTerms] = useState(0);
+  const {
+    data: categories,
+    fetchError: categoriesErrors,
+    isLoading: categoriesIsLoading,
+  } = useAxiosGet("/api/getRestaurantCategory");
+  console.log(categories);
   const {
     register,
     handleSubmit,
@@ -442,7 +448,7 @@ let AddResturant = () => {
                       errors.category && "invalid"
                     }`}
                     {...register("category", {
-                      required: "Ctegory Is Required",
+                      required: "Category Is Required",
                     })}
                     onKeyUp={() => {
                       trigger("category");
@@ -450,13 +456,11 @@ let AddResturant = () => {
                     aria-label="Default select example"
                   >
                     <option value="">category</option>
-                    <option value="1"></option>
-                    <option value="2"> </option>
-                    <option value="3"></option>
-                    <option value="4"></option>
-                    <option value="5"> </option>
-                    <option value="6"></option>
-                    <option value="7"></option>
+                    {categories?.category?.map((cat) =>{
+                      return(
+                        <option value={+cat.id}>{cat.name}</option>
+                      )
+                    })}
                   </select>
                   {errors.category && (
                     <small className="text-danger">
@@ -523,7 +527,6 @@ let AddResturant = () => {
                     )}
                   </div>
                 </div>
-                {/* <div className="col-4"> */}
                 <div
                   class="alert alert-warning d-flex align-items-center h-50"
                   role="alert"
@@ -593,7 +596,6 @@ let AddResturant = () => {
                 data-bs-toggle="modal"
                 data-bs-target="#termsmodal"
                 className={`terms-icon btn btn-secondary `}
-                // onClick={() => {setaddPackageStep(2)}}
               >
                 See Privecy & Terms
               </button>
@@ -603,7 +605,6 @@ let AddResturant = () => {
                 className={`one-icon `}
                 type="submit"
                 disabled={seeTerms === 0 ? true : false}
-                // onClick={() => {setaddPackageStep(2)}}
               >
                 Submit
               </button>
@@ -630,29 +631,11 @@ let AddHotel = () => {
     trigger,
     getValues,
   } = useForm();
-  const OnSubmit2 = async ({
-    name,
-    rate,
-    location,
-    support_email,
-    img_title_deed: i,
-    category,
-    descriprion,
-    images,
-    ...classes
-  }) => {
-    let names = [];
-    let prices = [];
-    let people = [];
-    let all = [...Object.values(classes)];
-    for (let i = 0; i < [...Object.values(classes)].length / 3; i++) {
-      names.push(all[i * 3]);
-      prices.push(all[i * 3 + 1]);
-      people.push(all[i * 3 + 2]);
-    }
-    console.log(all);
-    console.log(names, prices, people);
-  };
+  const {
+    data: categories,
+    fetchError: categoriesErrors,
+    isLoading: categoriesIsLoading,
+  } = useAxiosGet("/api/getHotelCategory");
   const OnSubmit = async ({
     name,
     rate,
@@ -690,18 +673,13 @@ let AddHotel = () => {
       formData.append(`classes[${i}]`, prices[i]);
       formData.append(`number_of_people[${i}]`, people[i]);
     }
-    // for(let i = 0; i < all.length/3; i++){
-    //   formData.append(`names[]`, names[i]);
-    //   formData.append(`classes[]`, prices[i]);
-    //   formData.append(`number_of_people[]`, people[i]);
-    // }
+
     setIsLooading(true);
     try {
       const response = await axios.post("/api/addHotel", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${auth.atoken}`,
-          //  'Access-Control-Allow-Origin' : 'http://localhost:8000'
         },
         withCredentials: true,
       });
@@ -749,9 +727,6 @@ let AddHotel = () => {
               {...register(`names-${id}`, {
                 required: "Class Name is Required",
               })}
-              // onKeyUp={() => {
-              //   trigger(`names-${id}`);
-              // }}
               placeholder="Class Name"
             />
             {errors[`names-${id}`] && (
@@ -783,9 +758,6 @@ let AddHotel = () => {
                   message: "Maximum Booking Price is 1000000 ",
                 },
               })}
-              // onKeyUp={() => {
-              //   trigger(`classes-${id}`);
-              // }}
               placeholder="Class Price"
             />
             {errors[`classes-${id}`] && (
@@ -819,9 +791,6 @@ let AddHotel = () => {
                   message: "Maximum People Number is 100",
                 },
               })}
-              // onKeyUp={() => {
-              //   trigger(`number_of_people-${id}`);
-              // }}
               placeholder="People Number"
             />
             {errors[`number_of_people-${id}`] && (
@@ -1007,39 +976,6 @@ let AddHotel = () => {
                   )}
                 </div>
               </div>
-              {/* <div className="col-5">
-                <div className="input-group input-group-lg  mb-1 ms-sm-5 ">
-                  <span className={`input-group-text fs-3 filed filed-icon `}>
-                    <FontAwesomeIcon icon={faMoneyBill} />
-                  </span>
-                  <input
-                    type="number"
-                    className={`form-control filed 
-                                      ${errors.price_booking && "invalid"}`}
-                    {...register("price_booking", {
-                      required: "Booking Price is Required",
-                      min: {
-                        value: 1,
-                        message: "Minimum Booking Price is 1",
-                      },
-                      max: {
-                        value: 100000,
-                        message: "Maximum Booking Price is 100000 ",
-                      },
-                    })}
-                    onKeyUp={() => {
-                      trigger("price_booking");
-                    }}
-                    placeholder="Booking Price"
-                  />
-                  <span className={`input-group-text  fs-4 filed `}>$</span>
-                  {errors.price_booking && (
-                    <small className="text-danger">
-                      {errors.price_booking.message}
-                    </small>
-                  )}
-                </div>
-              </div> */}
               <div className="col-5">
                 <div className="input-group input-group-lg mb-1 ms-sm-5">
                   <span
@@ -1058,18 +994,15 @@ let AddHotel = () => {
                     })}
                     onKeyUp={() => {
                       trigger("category");
-                      // seterrorSize ( Object.keys(errors).length)
                     }}
                     aria-label="Default select example"
                   >
                     <option value="">category</option>
-                    <option value="1"></option>
-                    <option value="2"> </option>
-                    <option value="3"></option>
-                    <option value="4"></option>
-                    <option value="5"> </option>
-                    <option value="6"></option>
-                    <option value="7"></option>
+                    {categories?.category?.map((cat) =>{
+                      return(
+                        <option value={+cat.id}>{cat.name}</option>
+                      )
+                    })}
                   </select>
                   {errors.category && (
                     <small className="text-danger">
@@ -1165,7 +1098,6 @@ let AddHotel = () => {
                     )}
                   </div>
                 </div>
-                {/* <div className="col-4"> */}
                 <div
                   class="alert alert-warning d-flex align-items-center h-50"
                   role="alert"
@@ -1209,7 +1141,6 @@ let AddHotel = () => {
                 data-bs-toggle="modal"
                 data-bs-target="#termsmodal"
                 className={`terms-icon btn btn-secondary `}
-                // onClick={() => {setaddPackageStep(2)}}
               >
                 See Privecy & Terms
               </button>
@@ -1219,7 +1150,6 @@ let AddHotel = () => {
                 className={`one-icon `}
                 type="submit"
                 disabled={seeTerms === 0 ? true : false}
-                // onClick={() => {setaddPackageStep(2)}}
               >
                 Submit
               </button>
@@ -1246,14 +1176,11 @@ let AddNaturalPlace = () => {
     trigger,
     getValues,
   } = useForm();
-  const OnSubmit2 = async ({
-    name,
-    location,
-    support_email,
-    category,
-    descriprion,
-    images,
-  }) => {};
+  const {
+    data: categories,
+    fetchError: categoriesErrors,
+    isLoading: categoriesIsLoading,
+  } = useAxiosGet("/api/getHotelCategory");
   const OnSubmit = async ({
     name,
     location,
@@ -1404,18 +1331,16 @@ let AddNaturalPlace = () => {
                     })}
                     onKeyUp={() => {
                       trigger("category");
-                      // seterrorSize ( Object.keys(errors).length)
                     }}
                     aria-label="Default select example"
                   >
                     <option value="">category</option>
-                    <option value="1"></option>
-                    <option value="2"></option>
-                    <option value="3"></option>
-                    <option value="4"></option>
-                    <option value="5"> </option>
-                    <option value="6"></option>
-                    <option value="7"></option>
+                    <option value="">category</option>
+                    {categories?.category?.map((cat) =>{
+                      return(
+                        <option value={+cat.id}>{cat.name}</option>
+                      )
+                    })}
                   </select>
                   {errors.category && (
                     <small className="text-danger">
@@ -1639,7 +1564,6 @@ let AddAirLine = () => {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${auth.atoken}`,
-          //  'Access-Control-Allow-Origin' : 'http://localhost:8000'
         },
         withCredentials: true,
       });
@@ -1687,9 +1611,6 @@ let AddAirLine = () => {
               {...register(`names-${id}`, {
                 required: "Class Name is Required",
               })}
-              // onKeyUp={() => {
-              //   trigger(`names-${id}`);
-              // }}
               placeholder="Class Name"
             />
             {errors[`names-${id}`] && (
@@ -1721,9 +1642,6 @@ let AddAirLine = () => {
                   message: "Maximum Booking Price is 100000 ",
                 },
               })}
-              // onKeyUp={() => {
-              //   trigger(`classes-${id}`);
-              // }}
               placeholder="Class Price"
             />
             {errors[`classes-${id}`] && (
@@ -1879,39 +1797,6 @@ let AddAirLine = () => {
                   )}
                 </div>
               </div>
-              {/* <div className="col-5">
-                <div className="input-group input-group-lg  mb-1 ms-sm-5 ">
-                  <span className={`input-group-text fs-3 filed filed-icon `}>
-                    <FontAwesomeIcon icon={faMoneyBill} />
-                  </span>
-                  <input
-                    type="number"
-                    className={`form-control filed 
-                                      ${errors.price_booking && "invalid"}`}
-                    {...register("price_booking", {
-                      required: "Booking Price is Required",
-                      min: {
-                        value: 1,
-                        message: "Minimum Booking Price is 1",
-                      },
-                      max: {
-                        value: 100000,
-                        message: "Maximum Booking Price is 100000 ",
-                      },
-                    })}
-                    onKeyUp={() => {
-                      trigger("price_booking");
-                    }}
-                    placeholder="Booking Price"
-                  />
-                  <span className={`input-group-text  fs-4 filed `}>$</span>
-                  {errors.price_booking && (
-                    <small className="text-danger">
-                      {errors.price_booking.message}
-                    </small>
-                  )}
-                </div>
-              </div> */}
               <div className="col-10 classes-box">
                 <RenderClasses />
                 <div className="col-2">
@@ -1993,7 +1878,6 @@ let AddAirLine = () => {
                 data-bs-toggle="modal"
                 data-bs-target="#termsmodal"
                 className={`terms-icon btn btn-secondary `}
-                // onClick={() => {setaddPackageStep(2)}}
               >
                 See Privecy & Terms
               </button>
@@ -2003,7 +1887,6 @@ let AddAirLine = () => {
                 className={`one-icon `}
                 type="submit"
                 disabled={seeTerms === 0 ? true : false}
-                // onClick={() => {setaddPackageStep(2)}}
               >
                 Submit
               </button>
@@ -2014,7 +1897,6 @@ let AddAirLine = () => {
     </>
   );
 };
-
 let AddPalce = () => {
   let [addplaceestep, setaddplaceestep] = useState(0);
   return (
@@ -2027,7 +1909,6 @@ let AddPalce = () => {
                 <img src="/imges/weee.jpg" class="img" alt="..." />
                 <div class="carousel-caption d-none d-md-block">
                 <img src="/logo/22.png"  className={'trip-logo'}  alt="..." />
-                  {/* <h3>Trip Tips World</h3> */}
                   <h5 className={'logo-title'}>
                   Offers You Everything You Need And More
                   </h5>

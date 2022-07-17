@@ -78,7 +78,6 @@ let AddPlacesToPackage = ({ packageInfo }) => {
   } = useForm();
   let errorSize = Object.keys(errors).length;
   const OnSubmit = async (values) => {
-    // var s = new Date(start_date).toISOString().slice(0,19).split('T').join(" ")
     console.log(values);
     const formdata = new FormData();
     formdata.append("package_id", packageInfo.id);
@@ -114,24 +113,11 @@ let AddPlacesToPackage = ({ packageInfo }) => {
       formdata.append(`to[${i}]`, values.to[i]);
     }
     for (let i = 0; i < values.place_id?.length; i++) {
-      formdata.append(`restaurant_id[${i}]`, values.place_id[i]);
+      formdata.append(`place_id[${i}]`, values.place_id[i]);
       let d = new Date(values.place_booking[i]).toISOString().split("T")[0];
       console.log(d);
       formdata.append(`place_booking[${i}]`, d);
     }
-
-    // formdata.append('package_id',1)
-    // formdata.append('restaurant_id[]',values.restaurant_id)
-    // formdata.append('restaurant_booking_date[]',values.restaurant_booking_date)
-    // formdata.append('hotel_class_id[]',values.hotel_class_id)
-    // formdata.append('hotel_booking_start_date[]',values.hotel_booking_start_date)
-    // formdata.append('hotel_booking_end_date[]',values.hotel_booking_end_date)
-    // formdata.append('airplane_class_id[]',values.airplane_class_id)
-    // formdata.append('airplane_booking_date[]',values.airplane_booking_date)
-    // formdata.append('from[0]','blah')
-    // formdata.append('to[0]','blah')
-    // formdata.append('place_id[]',values.place_id)
-    // formdata.append('place_booking[]',values.place_booking)
     setIsLooading(true);
     try {
       const response = await axios.post(
@@ -204,7 +190,7 @@ let AddPlacesToPackage = ({ packageInfo }) => {
                 aria-label="Default select example"
               >
                 <option value="">Natural Palces </option>
-                {allplaces.Place.map((place) => {
+                {allplaces?.Place?.map((place) => {
                   return (
                     <option value={+place.id}>
                       {" "}
@@ -293,7 +279,7 @@ let AddPlacesToPackage = ({ packageInfo }) => {
                 aria-label="Default select example"
               >
                 <option value="">Resturants </option>
-                {allresturants.restaurants.map((resturant) => {
+                {allresturants?.restaurants?.map((resturant) => {
                   return (
                     <option value={+resturant.id}>
                       {" "}
@@ -384,7 +370,7 @@ let AddPlacesToPackage = ({ packageInfo }) => {
                 aria-label="Default select example"
               >
                 <option value="">Hotels </option>
-                {allhotel.hotels.map((hotel) => {
+                {allhotel?.hotels?.map((hotel) => {
                   return (
                     <optgroup
                       label={`${hotel.name} / Location: ${hotel.location} / Rate : ${hotel.rate} Stars `}
@@ -518,7 +504,7 @@ let AddPlacesToPackage = ({ packageInfo }) => {
                 aria-label="Default select example"
               >
                 <option value="">AirLines</option>
-                {allairplanes.airplane.map((plane) => {
+                {allairplanes?.airplane?.map((plane) => {
                   return (
                     <optgroup
                       label={`${plane.name} / Location: ${plane.location} / Rate : ${plane.rate} Stars `}
@@ -756,7 +742,6 @@ let AddPackage = () => {
     fetchError: allsuperErrors,
     isLoading: allsuperIsLoading,
   } = useAxiosGet("/api/getTouristSupervisor");
-  // console.log(+allCategories.category[4].id);
   const {
     register,
     handleSubmit,
@@ -782,7 +767,7 @@ let AddPackage = () => {
       .join(" ");
     console.log(s);
     const formdata = new FormData();
-    formdata.append("img", img);
+    formdata.append("img", img[0]);
     formdata.append("name", name);
     formdata.append("start_date", s);
     formdata.append("category_id", category);
@@ -991,7 +976,6 @@ let AddPackage = () => {
                         })}
                         onKeyUp={() => {
                           trigger("tourist_supervisor");
-                          // seterrorSize ( Object.keys(errors).length)
                         }}
                         aria-label="Default select example"
                       >
@@ -1020,7 +1004,6 @@ let AddPackage = () => {
                       >
                         <FontAwesomeIcon icon={faMartiniGlassCitrus} />
                       </span>
-
                       <select
                         className={`form-select  filed fs-6 ${
                           errors.category && "invalid"
@@ -1146,9 +1129,6 @@ let AddPackage = () => {
                 <button
                   className="one-icon"
                   type="submit"
-                  // onClick={() => {
-                  //   setaddPackageStep(2);
-                  // }}
                 >
                   Next
                 </button>

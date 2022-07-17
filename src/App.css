@@ -12129,11 +12129,15 @@ textarea.form-control-lg {
   flex-direction: column;
   justify-content: center;
   align-self: flex-start;
-  border: 1px solid #fcb700;
-  border-radius: 10px;
+  border: 1px solid #00243f;
+  background-color: #00243f;
+  color: #fff;
+  border-radius: 35px;
   padding: 0px;
-  margin: 20PX;
+  margin: 15px;
   overflow: hidden;
+  min-width: 22% !important;
+  box-shadow: 8px 11px 12px 0px #584e00;
 }
 .dashboard-packages .pakagesList .card-config .imge-box {
   height: 200px;
@@ -12153,37 +12157,77 @@ textarea.form-control-lg {
   padding: 0 10px;
 }
 .dashboard-packages .pakagesList .card-config .text-box hr {
-  margin: 5px;
+  margin: 5px 1px;
+  color: #3c5b74;
+  opacity: 0.8;
 }
 .dashboard-packages .pakagesList .card-config .text-box .title {
+  text-transform: capitalize;
   font-family: "Oleo Script", cursive;
   font-size: 30px;
-  color: #00243f;
+  color: #fcb700;
 }
 .dashboard-packages .pakagesList .card-config .text-box .desc {
-  color: #000;
-  font-size: 15px;
+  color: #fff;
+  font-size: 16px;
 }
 .dashboard-packages .pakagesList .card-config .text-box .admin {
-  color: #264b77;
+  color: #a3acb1;
   font-size: 18px;
 }
 .dashboard-packages .pakagesList .card-config .text-box .price {
   display: inline;
   text-align: center;
   font-size: 20px;
-  color: #264b77;
-  border: 1px solid #264b77;
+  color: #00243f;
+  background-color: #fcb700;
+  border: 1px solid #fcb700;
   border-radius: 5px;
-  padding: 4PX;
+  padding: 4px;
+}
+.dashboard-packages .pakagesList .card-config .text-box .price .badge {
+  top: 0;
+  left: 90%;
+}
+.dashboard-packages .pakagesList .card-config .text-box .spene {
+  font-family: "Lato", sans-serif;
+  color: #e767a7;
+  font-weight: bold;
+  font-size: 18px;
 }
 .dashboard-packages .pakagesList .card-config .text-box .more {
   font-family: "Lato", sans-serif;
 }
 .dashboard-packages .pakagesList .card-config .text-box .more button {
-  color: #3c5b74;
   font-size: 16px;
   font-weight: bold;
+  border: none;
+  border: 1px solid #3c5b74;
+  background-color: #00243f;
+  color: #ff9800;
+  border-radius: 30px;
+  transition: all 500ms;
+}
+.dashboard-packages .pakagesList .card-config .text-box .more button:hover {
+  z-index: 3;
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+.dashboard-packages .pakagesList .card-config .text-box .more code {
+  font-size: 18px;
+}
+.dashboard-packages .pakagesList .card-config .text-box .more .accordion-item {
+  background-color: #00243f;
+}
+.dashboard-packages .pakagesList .card-config .text-box .more .accordion-header {
+  margin: 5px;
+  background-color: #00243f;
+}
+.dashboard-packages .pakagesList .card-config .text-box .more .accordion-body {
+  background-color: #00243f;
+  color: #fff;
+  font-size: 16px;
 }
 
 .addPackage {
