@@ -7,10 +7,13 @@
 @use  "./src/components/dashboard/packages/_packagesComponent";
 @use  "./src/components/dashboard/addpackage/_addpackageComponent";
 @use  "./src/components/dashboard/requests/_requestsComponent";
+@use  "./src/components/dashboard/support/_supportComponent";
 @use  "./src/components/reCAPTCHA/_reCAPTCHAComponent";
 @use  "./src/components/VerifyEmail/_verifyemailComponent";
 @use  "./src/components/forgotpassword/_forgotPasswordComponent";
 @use  "./src/components/home/_homeComponent";
 @use  "./src/components/addplace/_addplaceComponent";
+@use  "./src/components/help_center/_helpcenterComponent";
+
 
 @use  "./src/components/navbar/_navbarComponent";

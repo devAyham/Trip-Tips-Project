@@ -11867,6 +11867,9 @@ textarea.form-control-lg {
   margin: auto;
   margin-bottom: 0;
 }
+.dashborad .menu-shortcuts .admin-shortcuts .support-box a {
+  text-decoration: none;
+}
 .dashborad .menu-shortcuts .admin-shortcuts .support-box .headset-icon {
   position: absolute;
   color: rgba(178, 193, 216, 0.592);
@@ -11912,6 +11915,7 @@ textarea.form-control-lg {
   margin-right: 10px;
 }
 .dashborad .menu-shortcuts .admin-shortcuts .support-box .report-box .report-text {
+  text-decoration: none;
   color: #264b77;
   font-size: 20px;
   font-weight: 500;
@@ -11935,6 +11939,7 @@ textarea.form-control-lg {
   padding: 10px;
 }
 .dashborad .menu-shortcuts .admin-shortcuts .support-box .help-box .help-text {
+  text-decoration: none;
   color: #264b77;
   font-size: 20px;
   font-weight: 500;
@@ -12431,6 +12436,186 @@ textarea.form-control-lg {
   width: 100%;
 }
 
+.support-center .support-title {
+  font-size: 40px;
+  font-family: "Oleo Script", cursive;
+  color: #00243f;
+}
+.support-center .center-toggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+.support-center .center-toggle .toggler {
+  width: 600px;
+}
+.support-center .center-toggle .toggler .toggle-button {
+  border: 1px solid #264b77;
+  color: #264b77;
+  background-color: transparent;
+  font-family: "Lato", sans-serif;
+  font-weight: bold;
+  font-size: 20px;
+  transition: all 500ms;
+}
+.support-center .center-toggle .toggler .toggle-button.help {
+  border-right: 1px solid #264b77;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+.support-center .center-toggle .toggler .toggle-button.report {
+  border-right: 1px solid #264b77;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.support-center .center-toggle .toggler .toggle-button:hover, .support-center .center-toggle .toggler .toggle-button.active {
+  position: relative;
+  z-index: 3;
+  color: #fcb700;
+  background-color: #264b77;
+  border-color: #fcb700;
+  box-shadow: 0 0 0 0.25rem rgba(252, 185, 0, 0.5137254902);
+}
+.support-center .center-toggle .toggler .toggle-button.active {
+  width: 65%;
+}
+.support-center .centers-box {
+  position: relative;
+  width: 100%;
+  height: 85.5vh;
+  background-color: white;
+}
+.support-center .centers-box .center-wall {
+  transition: all 1000ms;
+  position: absolute;
+  background-color: #00243f;
+  width: 0.1%;
+  height: 100%;
+}
+.support-center .centers-box .center-wall.help-active {
+  left: 57.3%;
+}
+.support-center .centers-box .center-wall.report-active {
+  left: 42.2%;
+}
+.support-center .help-center {
+  position: relative;
+  overflow: scroll;
+  height: 100%;
+  width: 42.3%;
+  transition: all 1000ms;
+  background-color: rgba(60, 91, 116, 0.7450980392);
+}
+.support-center .help-center::-webkit-scrollbar {
+  width: 0.2vw;
+  height: 0;
+}
+.support-center .help-center.active {
+  width: 57.4%;
+  background-color: transparent;
+}
+.support-center .help-center .over-lay {
+  position: absolute;
+  z-index: 99;
+  height: 1000%;
+  overflow: scroll;
+  width: 100%;
+  transition: all 1000ms;
+  background-color: rgba(60, 91, 116, 0.7450980392);
+}
+.support-center .help-center .over-lay::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+.support-center .help-center .nav-link {
+  color: white !important;
+}
+.support-center .help-center .nav-link.active {
+  border: 1px solid #264b77;
+  border-bottom: 1px solid #00243f !important;
+  background-color: #00243f;
+}
+.support-center .help-center .the-main-card-header {
+  background-color: #a3acb1;
+}
+.support-center .help-center .the-main-card-body {
+  background-color: #00243f;
+}
+.support-center .help-center .help-card {
+  border-radius: 0 20px 20px 0;
+}
+.support-center .help-center .help-card .img-box {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  flex-direction: column;
+}
+.support-center .help-center .help-card .filed {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  background-color: #fff;
+  border: none;
+  border-bottom: solid 3px #a3acb1;
+  border-radius: 0px;
+  transition: all 0.5s;
+}
+.support-center .help-center .help-card .filed:focus {
+  box-shadow: none;
+  border-bottom-color: #00243f;
+}
+.support-center .help-center .help-card .filed.invalid {
+  box-shadow: none;
+  border-bottom-color: rgb(170, 0, 0);
+}
+.support-center .help-center .help-card .div-icon {
+  margin-top: 5px;
+  display: flex;
+  justify-content: center;
+}
+.support-center .help-center .help-card .div-icon .one-icon {
+  margin-top: 5px;
+  width: 100%;
+  border: none;
+  border-radius: 50px;
+  padding: 8px;
+  font-size: 15px;
+  font-family: "Lato", sans-serif;
+  background-color: #00243f;
+  color: #fff;
+  text-transform: uppercase;
+  transition: all 0.1s;
+}
+.support-center .help-center .help-card .div-icon .one-icon[disabled] {
+  background-color: #a3acb1 !important;
+}
+.support-center .report-center {
+  position: relative;
+  overflow: scroll;
+  height: 100%;
+  width: 42.6%;
+  transition: all 1000ms;
+  background-color: rgba(60, 91, 116, 0.7450980392);
+}
+.support-center .report-center::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+.support-center .report-center.active {
+  width: 57.6%;
+  background-color: transparent;
+}
+.support-center .report-center .over-lay {
+  position: absolute;
+  z-index: 99;
+  height: 100%;
+  width: 100%;
+  transition: all 1000ms;
+  background-color: rgba(60, 91, 116, 0.7450980392);
+}
+
 .reCAPTCHA-box {
   margin-top: 20px;
   display: flex;
@@ -12723,6 +12908,173 @@ textarea.form-control-lg {
 .add-place .btn-outline-primary:hover {
   color: #fff !important;
   background-color: #264b77 !important;
+}
+
+.help-overlay {
+  position: relative;
+  width: 100%;
+  min-height: 45vh;
+  background: linear-gradient(-60deg, #3c5b74 calc(30% - 0.5px), #ecf0f1 calc(30% + 0.5px), #ecf0f1 calc(71% + 0.5px), #3c5b74 71%);
+}
+.help-overlay .caption {
+  position: relative;
+  height: 100%;
+}
+.help-overlay .caption .trip-logo {
+  position: absolute;
+  top: -30%;
+  left: -14%;
+  width: 400px;
+}
+.help-overlay .caption .logo-title {
+  position: relative;
+  top: 100%;
+  left: -22%;
+  color: #264b77;
+  font-family: "Oleo Script", cursive;
+  text-align: center;
+}
+.help-overlay .lll {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.help-overlay .lll .road-logo {
+  position: absolute;
+  overflow: visible;
+  width: 80%;
+}
+.help-overlay .lll .navigator-logo {
+  position: absolute;
+  overflow: visible;
+  width: 115%;
+  margin-left: 34px;
+}
+.help-overlay .jagged-wrap-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  transform: rotate(0.5turn);
+}
+.help-overlay .jagged-wrap-inner .jagged-border {
+  position: relative;
+  top: 0%;
+  width: 100%;
+  height: 15px;
+}
+.help-overlay .jagged-wrap-inner .jagged-border:before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -10px;
+  width: 100%;
+  height: 10px;
+}
+.help-overlay .jagged-wrap-inner .lightgray-bg {
+  background: #e6a800;
+  filter: drop-shadow(#e6a900 0px 1px 2px);
+}
+.help-overlay .jagged-wrap-inner .lightgray-bg:before {
+  background: linear-gradient(45deg, transparent 33.333%, #e6a800 33.333%, #e6a800 66.667%, transparent 66.667%), linear-gradient(-45deg, transparent 33.333%, #e6a800 33.333%, #e6a800 66.667%, transparent 66.667%);
+  background-size: 20px 40px;
+}
+.help-overlay .jagged-wrap-inner .white-bg {
+  background: #3c5b74;
+  filter: drop-shadow(#3c5b74 0px 1px 2px);
+}
+.help-overlay .jagged-wrap-inner .white-bg:before {
+  background: linear-gradient(45deg, transparent 33.333%, #3c5b74 33.333%, #3c5b74 66.667%, transparent 66.667%), linear-gradient(-45deg, transparent 33.333%, #3c5b74 33.333%, #3c5b74 66.667%, transparent 66.667%);
+  background-size: 20px 40px;
+}
+.help-overlay .jagged-wrap-inner .darkgray-bg {
+  background: #a3acb1;
+  filter: drop-shadow(#a3acb1 0px 1px 2px);
+}
+.help-overlay .jagged-wrap-inner .darkgray-bg:before {
+  background: linear-gradient(45deg, transparent 33.333%, #a3acb1 33.333%, #a3acb1 66.667%, transparent 66.667%), linear-gradient(-45deg, transparent 33.333%, #a3acb1 33.333%, #a3acb1 66.667%, transparent 66.667%);
+  background-size: 20px 40px;
+}
+
+.help-body {
+  width: 100%;
+  min-height: 55vh;
+  background: linear-gradient(70deg, #3c5b74 28.5%, #ecf0f1 28.5%, #ecf0f1 71%, #3c5b74 71%);
+}
+.help-body .fields {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-content: center;
+}
+.help-body .fields .how {
+  margin-top: 15px;
+  width: 90%;
+  text-align: center;
+  font-family: "Oleo Script", cursive;
+  color: #3c5b74;
+  font-size: 35px;
+}
+.help-body .fields .form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+}
+.help-body .fields .form .ReCAPTCHA-div {
+  width: 90%;
+}
+.help-body .fields .form .div-icon {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-left: 50px;
+}
+.help-body .fields .form .div-icon .one-icon {
+  margin-top: 10px;
+  width: 30%;
+  border: none;
+  border-radius: 50px;
+  padding: 8px;
+  font-size: 20px;
+  font-family: "Lato", sans-serif;
+  background-color: #00243f;
+  color: #fff;
+  text-transform: uppercase;
+  transition: all 0.1s;
+}
+.help-body .fields .form .div-icon .one-icon[disabled] {
+  background-color: #a3acb1 !important;
+}
+.help-body .fields .filed {
+  margin-top: 15px;
+  margin-bottom: 5px;
+  background-color: transparent;
+  border: none;
+  border-bottom: solid 3px #a3acb1;
+  border-radius: 0px;
+  transition: all 0.5s;
+  text-align: center;
+  font-size: 18px;
+}
+.help-body .fields .filed:focus {
+  box-shadow: none;
+  border-bottom-color: #00243f;
+}
+.help-body .fields .filed.invalid {
+  box-shadow: none;
+  border-bottom-color: rgb(199, 0, 0);
+}
+.help-body .note {
+  min-width: 20%;
+  margin: auto;
+  filter: drop-shadow(#e6a900 0px 1px 2px);
+}
+.help-body .note hr {
+  margin: 2px 0;
+}
+.help-body .note span {
+  font-size: 13px;
 }
 
 .sidebar {

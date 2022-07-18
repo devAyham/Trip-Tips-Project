@@ -13,7 +13,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useEffect, useState } from "react";
 import Calendar from "react-calendar";
-import {useNavigate} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import { Bar, Doughnut } from "react-chartjs-2";
 import { NavLink } from "react-router-dom";
 import { baseURl } from "../../api/baseURL";
@@ -671,6 +671,7 @@ let Dashboard = () => {
             <div className="support-box">
               <FontAwesomeIcon className="headset-icon" icon={faHeadset} />
               <div className="title">Support</div>
+              <NavLink to={`/dashboard/supportcenter/2`}>
               <div className="report-box">
                 <FontAwesomeIcon
                   className={"report-icon"}
@@ -678,7 +679,10 @@ let Dashboard = () => {
                 />
                 <div className="report-text">Report Center</div>
               </div>
+              </NavLink>
+
               <div className="hhr col-8"></div>
+              <NavLink to={`/dashboard/supportcenter/1`}>
               <div className="help-box">
                 <img
                   className={"help-icon img-fluid"}
@@ -687,6 +691,7 @@ let Dashboard = () => {
                 />
                 <div className="help-text">Help Center</div>
               </div>
+              </NavLink>
               <div className="helpcenter-box"></div>
             </div>
           </div>

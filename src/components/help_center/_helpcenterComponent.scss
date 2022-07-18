@@ -1,0 +1,224 @@
+@use "../../shared/colors&fonts" as *;
+
+.help-overlay {
+  position: relative;
+  width: 100%;
+  min-height: 45vh;
+  background: linear-gradient(
+    -60deg,
+    $ink_blue calc(30% - 0.5px),
+    #ecf0f1 calc(30% + 0.5px),
+    #ecf0f1 calc(71% + 0.5px),
+    $ink_blue calc(71%)
+  );
+  .caption {
+    position: relative;
+    height: 100%;
+    .trip-logo {
+      position: absolute;
+      top: -30%;
+      left: -14%;
+      width: 400px;
+    }
+    .logo-title {
+      position: relative;
+      top: 100%;
+      left: -22%;
+      color: $light_blue;
+      font-family: $title_font;
+      text-align: center;
+    }
+  }
+  .lll {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    .road-logo {
+      position: absolute;
+      overflow: visible;
+      width: 80%;
+      // margin-left: 7%;
+    }
+    .navigator-logo {
+      position: absolute;
+      overflow: visible;
+      width: 115%;
+      margin-left: 34px;
+    }
+  }
+  .jagged-wrap-inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    transform: rotate(0.5turn);
+    .jagged-border {
+      position: relative;
+      top: 0%;
+      width: 100%;
+      height: 15px;
+    }
+    .jagged-border:before {
+      content: "";
+      display: block;
+      position: absolute;
+      top: -10px;
+      width: 100%;
+      height: 10px;
+    }
+    .lightgray-bg {
+      background: #e6a800;
+      filter: drop-shadow(#e6a900 0px 1px 2px);
+    }
+    .lightgray-bg:before {
+      background: linear-gradient(
+          45deg,
+          transparent 33.333%,
+          #e6a800 33.333%,
+          #e6a800 66.667%,
+          transparent 66.667%
+        ),
+        linear-gradient(
+          -45deg,
+          transparent 33.333%,
+          #e6a800 33.333%,
+          #e6a800 66.667%,
+
+          transparent 66.667%
+        );
+      background-size: 20px 40px;
+    }
+    .white-bg {
+      background: #3c5b74;
+      filter: drop-shadow(#3c5b74 0px 1px 2px);
+    }
+    .white-bg:before {
+      background: linear-gradient(
+          45deg,
+          transparent 33.333%,
+          #3c5b74 33.333%,
+          #3c5b74 66.667%,
+          transparent 66.667%
+        ),
+        linear-gradient(
+          -45deg,
+          transparent 33.333%,
+          #3c5b74 33.333%,
+          #3c5b74 66.667%,
+          transparent 66.667%
+        );
+      background-size: 20px 40px;
+    }
+    .darkgray-bg {
+      background: $gray;
+      filter: drop-shadow($gray 0px 1px 2px);
+    }
+    .darkgray-bg:before {
+      background: linear-gradient(
+          45deg,
+          transparent 33.333%,
+          $gray 33.333%,
+          $gray 66.667%,
+          transparent 66.667%
+        ),
+        linear-gradient(
+          -45deg,
+          transparent 33.333%,
+          $gray 33.333%,
+          $gray 66.667%,
+          transparent 66.667%
+        );
+      background-size: 20px 40px;
+    }
+  }
+}
+.help-body {
+  // position: relative;
+  width: 100%;
+  min-height: 55vh;
+  background: linear-gradient(
+    70deg,
+    $ink_blue calc(28.5%),
+    #ecf0f1 calc(28.5%),
+    #ecf0f1 calc(71%),
+    $ink_blue calc(71%)
+  );
+  .fields {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-content: center;
+    .how {
+      margin-top: 15px;
+      width: 90%;
+      text-align: center;
+      font-family: $title_font;
+      color: $ink_blue;
+      font-size: 35px;
+    }
+    .form {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 90%;
+
+      .ReCAPTCHA-div {
+        width: 90%;
+        // margin-right: 50px;
+      }
+      .div-icon {
+        // margin-top: 5px;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-left: 50px;
+        .one-icon {
+          margin-top: 10px;
+          width: 30%;
+          border: none;
+          border-radius: 50px;
+          padding: 8px;
+          font-size: 20px;
+          font-family: $normal_font;
+          background-color: $dark_blue;
+          color: $white;
+          text-transform: uppercase;
+          transition: all 0.1s;
+          &[disabled] {
+            background-color: $gray !important;
+          }
+        }
+      }
+    }
+    .filed {
+      margin-top: 15px;
+      margin-bottom: 5px;
+      background-color: transparent;
+      border: none;
+      border-bottom: solid 3px $gray;
+      border-radius: 0px;
+      transition: all 0.5s;
+      text-align: center;
+      font-size: 18px;
+      &:focus {
+        box-shadow: none;
+        border-bottom-color: $dark_blue;
+      }
+      &.invalid {
+        box-shadow: none;
+        border-bottom-color: rgb(199, 0, 0);
+      }
+    }
+  }
+  .note{
+    min-width:  20%;
+    margin: auto;
+    filter: drop-shadow(#e6a900 0px 1px 2px);
+    hr{
+      margin: 2px 0;
+    }
+    span{
+      font-size: 13px;
+    }
+  }
+}

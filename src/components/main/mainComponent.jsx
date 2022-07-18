@@ -20,6 +20,7 @@ import Requests from "../dashboard/requests/requestsComponent";
 import Contracts from "../dashboard/contracts/contractsComponent";
 import Earnings from "../dashboard/earnings/earningsComponent";
 import AddPackage from "../dashboard/addpackage/addpackageComponent";
+import SupportCenter from "../dashboard/support/supportComponent";
 
 let Main = () => {
   const { auth } = useContext(AuthContext);
@@ -40,6 +41,7 @@ let Main = () => {
           <Route path="/dashboard/requests" element={<Requests />} />
           <Route path="/dashboard/contracts" element={<Contracts />} />
           <Route path="/dashboard/earnings" element={<Earnings />} />
+          <Route path="/dashboard/supportcenter/:sec" element={<SupportCenter />} />
           <Route path="/addplace" element={<AddPalce />} />
           <Route path="/mangeplaces" element={<Home />} />
         {/* </Route> */}

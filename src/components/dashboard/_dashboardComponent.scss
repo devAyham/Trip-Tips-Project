@@ -252,7 +252,9 @@
         overflow: hidden;
         margin: auto;
         margin-bottom: 0;
-        // box-shadow: 5px 3px 12px 0px #000000;
+        a{
+          text-decoration: none;
+        }
         .headset-icon {
           position: absolute;
           color: rgba(178, 193, 216, 0.592);
@@ -308,6 +310,7 @@
             margin-right: 10px;
           }
           .report-text {
+        text-decoration: none;
             color: $light_blue;
             font-size: 20px;
             font-weight: 500;
@@ -332,6 +335,7 @@
             padding: 10px;
           }
           .help-text {
+        text-decoration: none;
             color: $light_blue;
             font-size: 20px;
             font-weight: 500;
