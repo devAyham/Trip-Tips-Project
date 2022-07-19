@@ -2,9 +2,64 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useSearchParams, useParams } from "react-router-dom";
+import { baseURl } from "../../../api/baseURL";
+import { useNavigate } from "react-router";
 
+let HelpCenter = ({ section }) => {
+  console.log(section);
+  let activeIconToggle = (e) => {
+    let nav_link = document.querySelectorAll(".nav-link");
+    nav_link.forEach((element) => {
+      element.classList.remove("active");
+    });
+    e.target.classList.add("active");
+  };
+  return (
+    <>
+      <div className="row">
+        <div className="help-cards col-12 ">
+          <div className="the-main-card card ">
+            <div className="card-header the-main-card-header">
+              <ul className="nav nav-tabs card-header-tabs">
+                <li className="nav-item">
+                  <a
+                    className="nav-link active"
+                    aria-current="true"
+                    href="#1"
+                    onClick={(e) => {
+                      activeIconToggle(e);
+                    }}
+                  >
+                    New
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link"
+                    href="#2"
+                    onClick={(e) => {
+                      activeIconToggle(e);
+                    }}
+                  >
+                    Answerd
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div className="card-body the-main-card-body ">
+              <RenderHelpCards card={1} section={section} />
+              <RenderHelpCards card={1} section={section} />
+              <RenderHelpCards card={1} section={section} />
+              <RenderHelpCards card={1} section={section} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
 let RenderHelpCards = ({ card, section }) => {
-    console.log(section);
+  console.log(section);
   const {
     register,
     handleSubmit,
@@ -20,9 +75,13 @@ let RenderHelpCards = ({ card, section }) => {
       <div className="card help-card mb-3 ">
         <div className="row g-0">
           <div className="col-md-3">
-              <div className="img-box">
-                <img src="/logo/4.png" className="img-fluid rounded-start" alt="..." />
-              </div>
+            <div className="img-box">
+              <img
+                src="/logo/4.png"
+                className="img-fluid rounded-start"
+                alt="..."
+              />
+            </div>
           </div>
           <div className="col-md-9">
             <div className="card-body">
@@ -70,9 +129,10 @@ let RenderHelpCards = ({ card, section }) => {
     </>
   );
 };
-
-let HelpCenter = ({ section }) => {
-    console.log(section);
+let ReportCenter = ({ section }) => {
+  const navigate = useNavigate();
+  const [reportsType, setreportsType] = useState(1);
+  console.log(section);
   let activeIconToggle = (e) => {
     let nav_link = document.querySelectorAll(".nav-link");
     nav_link.forEach((element) => {
@@ -82,9 +142,9 @@ let HelpCenter = ({ section }) => {
   };
   return (
     <>
-      <div className="row offset-1">
-        <div className="help-cards col-12">
-          <div className="the-main-card card mt-3">
+      <div className="row ">
+        <div className="report-cards col-12">
+          <div className="the-main-card card ">
             <div className="card-header the-main-card-header">
               <ul className="nav nav-tabs card-header-tabs">
                 <li className="nav-item">
@@ -94,9 +154,10 @@ let HelpCenter = ({ section }) => {
                     href="#1"
                     onClick={(e) => {
                       activeIconToggle(e);
+                      setreportsType(1);
                     }}
                   >
-                    New
+                    Comments Reports
                   </a>
                 </li>
                 <li className="nav-item">
@@ -105,16 +166,54 @@ let HelpCenter = ({ section }) => {
                     href="#2"
                     onClick={(e) => {
                       activeIconToggle(e);
+                      setreportsType(2);
                     }}
                   >
-                    Answerd
+                    Places Reports
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link"
+                    href="#2"
+                    onClick={(e) => {
+                      activeIconToggle(e);
+                      setreportsType(3);
+                    }}
+                  >
+                    Packages Reports
                   </a>
                 </li>
               </ul>
             </div>
             <div className="card-body the-main-card-body ">
-                <RenderHelpCards card={1} section={section}/>
-                <RenderHelpCards card={1} section={section}/>
+              <div class="row row-cols-1 row-cols-md-3 g-4">
+                {reportsType === 1 ? (
+                  <>
+                    <RenderReportComments />
+                    <RenderReportComments />
+                    <RenderReportComments />
+                    <RenderReportComments />
+                  </>
+                ) : reportsType === 2 ? (
+                  <>
+                    <RenderReportPlaces />
+                    <RenderReportPlaces />
+                    <RenderReportPlaces />
+                    <RenderReportPlaces />
+                    <RenderReportPlaces />
+                    <RenderReportPlaces />
+                    <RenderReportPlaces />
+                    <RenderReportPlaces />
+                  </>
+                ) : reportsType === 3 ? (
+                  <>
+                    <RenderReportPackages />
+                  </>
+                ) : (
+                  ""
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -122,7 +221,174 @@ let HelpCenter = ({ section }) => {
     </>
   );
 };
-
+let RenderReportComments = () => {
+  const navigate = useNavigate();
+  return (
+    <>
+      {" "}
+      <div class="col">
+        <div class="card report-card h-100">
+          <div class="card-header header-card">
+            <h4 className="">By : </h4>
+            <div className="user-info">
+              <div className="img-model ">
+                <img
+                  src={"/logo/3.png"}
+                  alt={"..."}
+                  onClick={() => {
+                    navigate("/dashboard/users");
+                  }}
+                  style={{ cursor: "pointer" }}
+                />
+              </div>
+              <h6
+                className="div"
+                onClick={() => {
+                  navigate("/dashboard/users");
+                }}
+                style={{ cursor: "pointer" }}
+              >
+                Ayham Hammami
+              </h6>
+            </div>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">On :</h5>
+            <h6
+              onClick={() => {
+                navigate("/dashboard/users");
+              }}
+              style={{ cursor: "pointer" }}
+            >
+              A Comment For Amgad Alwattar <br /> / Id : 40{" "}
+            </h6>
+            <h5> Report Note :</h5>
+            <p class="card-text">
+              This is a wider card with supporting text below as a natural
+              lead-in to additional content. This content is a little bit
+              longer.
+            </p>
+          </div>
+          <div class="card-footer footer-card">
+            <small class="">time/time/time</small>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+let RenderReportPlaces = () => {
+  const navigate = useNavigate();
+  return (
+    <>
+      {" "}
+      <div class="col">
+        <div class="card report-card h-100">
+          <div class="card-header header-card">
+            <h4 className="">By : </h4>
+            <div className="user-info">
+              <div className="img-model ">
+                <img
+                  src={"/logo/3.png"}
+                  alt={"..."}
+                  onClick={() => {
+                    navigate("/dashboard/users");
+                  }}
+                  style={{ cursor: "pointer" }}
+                />
+              </div>
+              <h6
+                className="div"
+                onClick={() => {
+                  navigate("/dashboard/users");
+                }}
+                style={{ cursor: "pointer" }}
+              >
+                Ayham Hammami
+              </h6>
+            </div>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">On :</h5>
+            <h6
+              onClick={() => {
+                navigate("/dashboard/contracts");
+              }}
+              style={{ cursor: "pointer" }}
+            >
+              A Sweet Park Resturant <br />/ Id : 40
+            </h6>
+            <h5> Report Note :</h5>
+            <p class="card-text">
+              This is a wider card with supporting text below as a natural
+              lead-in to additional content. This content is a little bit
+              longer.
+            </p>
+          </div>
+          <div class="card-footer footer-card">
+            <small class="">time/time/time</small>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+let RenderReportPackages = () => {
+  const navigate = useNavigate();
+  return (
+    <>
+      {" "}
+      <div class="col">
+        <div class="card report-card h-100">
+          <div class="card-header header-card">
+            <h4 className="">By : </h4>
+            <div className="user-info">
+              <div className="img-model ">
+                <img
+                  src={"/logo/3.png"}
+                  alt={"..."}
+                  onClick={() => {
+                    navigate("/dashboard/users");
+                  }}
+                  style={{ cursor: "pointer" }}
+                />
+              </div>
+              <h6
+                className="div"
+                onClick={() => {
+                  navigate("/dashboard/users");
+                }}
+                style={{ cursor: "pointer" }}
+              >
+                Ayham Hammami
+              </h6>
+            </div>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">On :</h5>
+            <h6
+              onClick={() => {
+                navigate("/dashboard/packages");
+              }}
+              style={{ cursor: "pointer" }}
+            >
+              A Holidy Package <br /> / Id : 40
+            </h6>
+            <h5> Report Note :</h5>
+            <p class="card-text">
+              This is a wider card with supporting text below as a natural
+              lead-in to additional content. This content is a little bit
+              longer.
+            </p>
+          </div>
+          <div class="card-footer footer-card">
+            <small class="">time/time/time</small>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
 let SupportCenter = () => {
   let { sec } = useParams();
   let [section, setSeection] = useState(+sec);
@@ -154,7 +420,9 @@ let SupportCenter = () => {
             >
               <button
                 type="button"
-                className={`btn help toggle-button  ${section === 1 && "active"} `}
+                className={`btn help toggle-button  ${
+                  section === 1 && "active"
+                } `}
                 onClick={() => {
                   setSeection(1);
                 }}
@@ -180,7 +448,7 @@ let SupportCenter = () => {
             <div
               className={`over-lay ${section === 2 ? "d-block" : "d-none"} `}
             />
-            <HelpCenter section ={section} />
+            <HelpCenter section={section} />
           </div>
           <div
             className={`center-wall ${
@@ -195,6 +463,7 @@ let SupportCenter = () => {
             <div
               className={`over-lay ${section === 1 ? "d-block" : "d-none"}`}
             />
+            <ReportCenter section={section} />
           </div>
         </div>
       </div>

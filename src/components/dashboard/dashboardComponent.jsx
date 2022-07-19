@@ -2,6 +2,7 @@ import {
   faChartLine,
   faFileCirclePlus,
   faFileInvoice,
+  faFontAwesome,
   faGlobe,
   faHeadset,
   faInfoCircle,
@@ -674,8 +675,8 @@ let Dashboard = () => {
               <NavLink to={`/dashboard/supportcenter/2`}>
               <div className="report-box">
                 <FontAwesomeIcon
-                  className={"report-icon"}
-                  icon={faInfoCircle}
+                  className={"report-icon ms-1"}
+                  icon={faFontAwesome}
                 />
                 <div className="report-text">Report Center</div>
               </div>

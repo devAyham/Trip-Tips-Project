@@ -12507,6 +12507,10 @@ textarea.form-control-lg {
   transition: all 1000ms;
   background-color: rgba(60, 91, 116, 0.7450980392);
 }
+.support-center .help-center .help-cards {
+  margin-left: 7.8%;
+  max-width: 92.5% !important;
+}
 .support-center .help-center::-webkit-scrollbar {
   width: 0.2vw;
   height: 0;
@@ -12516,13 +12520,13 @@ textarea.form-control-lg {
   background-color: transparent;
 }
 .support-center .help-center .over-lay {
+  backdrop-filter: blur(5px);
   position: absolute;
   z-index: 99;
   height: 1000%;
-  overflow: scroll;
-  width: 100%;
+  width: 105%;
   transition: all 1000ms;
-  background-color: rgba(60, 91, 116, 0.7450980392);
+  background-color: rgba(60, 91, 116, 0.4745098039);
 }
 .support-center .help-center .over-lay::-webkit-scrollbar {
   width: 0;
@@ -12536,16 +12540,19 @@ textarea.form-control-lg {
   border-bottom: 1px solid #00243f !important;
   background-color: #00243f;
 }
-.support-center .help-center .the-main-card-header {
+.support-center .help-center .the-main-card {
+  height: 100%;
+}
+.support-center .help-center .the-main-card .the-main-card-header {
   background-color: #a3acb1;
 }
-.support-center .help-center .the-main-card-body {
+.support-center .help-center .the-main-card .the-main-card-body {
   background-color: #00243f;
 }
-.support-center .help-center .help-card {
+.support-center .help-center .the-main-card .help-card {
   border-radius: 0 20px 20px 0;
 }
-.support-center .help-center .help-card .img-box {
+.support-center .help-center .the-main-card .help-card .img-box {
   height: 100%;
   display: flex;
   justify-content: center;
@@ -12553,7 +12560,7 @@ textarea.form-control-lg {
   align-content: center;
   flex-direction: column;
 }
-.support-center .help-center .help-card .filed {
+.support-center .help-center .the-main-card .help-card .filed {
   margin-top: 5px;
   margin-bottom: 5px;
   background-color: #fff;
@@ -12562,20 +12569,20 @@ textarea.form-control-lg {
   border-radius: 0px;
   transition: all 0.5s;
 }
-.support-center .help-center .help-card .filed:focus {
+.support-center .help-center .the-main-card .help-card .filed:focus {
   box-shadow: none;
   border-bottom-color: #00243f;
 }
-.support-center .help-center .help-card .filed.invalid {
+.support-center .help-center .the-main-card .help-card .filed.invalid {
   box-shadow: none;
   border-bottom-color: rgb(170, 0, 0);
 }
-.support-center .help-center .help-card .div-icon {
+.support-center .help-center .the-main-card .help-card .div-icon {
   margin-top: 5px;
   display: flex;
   justify-content: center;
 }
-.support-center .help-center .help-card .div-icon .one-icon {
+.support-center .help-center .the-main-card .help-card .div-icon .one-icon {
   margin-top: 5px;
   width: 100%;
   border: none;
@@ -12588,7 +12595,7 @@ textarea.form-control-lg {
   text-transform: uppercase;
   transition: all 0.1s;
 }
-.support-center .help-center .help-card .div-icon .one-icon[disabled] {
+.support-center .help-center .the-main-card .help-card .div-icon .one-icon[disabled] {
   background-color: #a3acb1 !important;
 }
 .support-center .report-center {
@@ -12599,21 +12606,83 @@ textarea.form-control-lg {
   transition: all 1000ms;
   background-color: rgba(60, 91, 116, 0.7450980392);
 }
-.support-center .report-center::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-}
 .support-center .report-center.active {
   width: 57.6%;
   background-color: transparent;
 }
+.support-center .report-center::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
 .support-center .report-center .over-lay {
+  backdrop-filter: blur(5px);
   position: absolute;
   z-index: 99;
-  height: 100%;
+  height: 1000%;
   width: 100%;
   transition: all 1000ms;
-  background-color: rgba(60, 91, 116, 0.7450980392);
+  background-color: rgba(60, 91, 116, 0.4745098039);
+}
+.support-center .report-cards {
+  height: 100%;
+}
+.support-center .report-cards .nav-link {
+  color: white !important;
+}
+.support-center .report-cards .nav-link.active {
+  border: 1px solid #264b77;
+  border-bottom: 1px solid #00243f !important;
+  background-color: #00243f;
+}
+.support-center .report-cards .the-main-card-header {
+  background-color: #a3acb1;
+}
+.support-center .report-cards .the-main-card-body {
+  background-color: #00243f;
+}
+.support-center .report-cards .report-card {
+  border: none;
+  border: 1px solid #fff;
+}
+.support-center .report-cards .report-card .header-card {
+  border: none;
+  border-bottom: 1px solid #fcb700;
+  background-color: #3c5b74;
+  color: white;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.support-center .report-cards .report-card .header-card .user-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+.support-center .report-cards .report-card .header-card .img-model {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  border-radius: 50%;
+  margin: 5px;
+  overflow: hidden;
+  transition: all 200ms;
+}
+.support-center .report-cards .report-card .header-card .img-model:hover {
+  transform: translateY(-5px);
+}
+.support-center .report-cards .report-card .header-card .img-model img {
+  width: 100%;
+  height: 100%;
+}
+.support-center .report-cards .report-card .footer-card {
+  border: none;
+  border-top: 1px solid #fcb700;
+  background-color: #3c5b74;
+  color: white;
 }
 
 .reCAPTCHA-box {
@@ -13075,6 +13144,186 @@ textarea.form-control-lg {
 }
 .help-body .note span {
   font-size: 13px;
+}
+
+.profile {
+  height: 100vh;
+}
+.profile .cover-box {
+  z-index: 0;
+  object-fit: cover;
+  width: 100%;
+  height: 50vh;
+  position: fixed;
+}
+.profile .cover-box .cover {
+  z-index: 0;
+  width: 100%;
+  height: 50vh;
+  position: fixed;
+  object-fit: cover;
+  object-position: top;
+}
+.profile .cover-box .cover-over-lay {
+  position: fixed;
+  z-index: 1;
+  width: 100%;
+  height: 50vh;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.profile .header-info {
+  margin-left: 5%;
+  width: 95%;
+  height: 350px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  height: 350px;
+  z-index: 2;
+}
+.profile .header-info .img-box {
+  display: block;
+  position: fixed;
+  top: 5%;
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #fcb700;
+}
+.profile .header-info .img-box img {
+  width: 100%;
+}
+.profile .header-info .edit-icon {
+  cursor: pointer;
+}
+.profile .header-info .edit-icon:hover svg {
+  stroke: #00243f !important;
+}
+.profile .header-info .edit-icon:hover path {
+  stroke: #00243f !important;
+}
+.profile .header-info .profile-name {
+  top: 31%;
+  position: fixed;
+  font-family: "Oleo Script", cursive;
+  color: #fff;
+  text-align: center;
+}
+.profile .scroll-box {
+  margin-top: auto;
+  width: 95%;
+  height: 59vh;
+  position: relative;
+  z-index: 5;
+  background-color: transparent;
+  overflow: scroll;
+  display: flex;
+}
+.profile .scroll-box::-webkit-scrollbar {
+  width: 0vw;
+  height: 0;
+}
+.profile .scroll-box .personal-info-profile,
+.profile .scroll-box .financial-info-profile,
+.profile .scroll-box .property-info-profile,
+.profile .scroll-box .settings-info-profile {
+  width: 70%;
+  min-height: 50%;
+  border-radius: 10px;
+  background-color: #00243f;
+  margin-bottom: 30px;
+}
+.profile .scroll-box .personal-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30%;
+  width: 100%;
+  color: white;
+  text-align: center;
+  font-family: "Lato", sans-serif;
+  font-weight: 800;
+  letter-spacing: 1px;
+  font-size: 30px;
+}
+.profile .scroll-box hr {
+  background-color: white;
+  color: white;
+  height: 2px;
+  opacity: 0.8;
+}
+.profile .scroll-box .personal-content, .profile .scroll-box .settings-info-profile .settings {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  color: white;
+  font-size: 20px;
+  height: 55%;
+  overflow: scroll;
+  font-family: "Lato", sans-serif;
+  margin-left: 18%;
+}
+.profile .scroll-box .personal-content .icon, .profile .scroll-box .settings-info-profile .settings .icon {
+  color: #fcb700;
+  font-size: 30px;
+}
+.profile .scroll-box .personal-content p, .profile .scroll-box .settings-info-profile .settings p {
+  display: inline;
+  margin-left: 10px;
+}
+.profile .scroll-box .personal-content span, .profile .scroll-box .settings-info-profile .settings span {
+  color: #fcb700;
+}
+.profile .scroll-box .settings-info-profile {
+  margin-bottom: 220px;
+}
+.profile .scroll-box .settings-info-profile .settings .setting-option {
+  cursor: pointer;
+  font-size: 25px;
+  transition: all 500ms;
+}
+.profile .scroll-box .settings-info-profile .settings .setting-option:hover {
+  color: #fcb700;
+}
+.profile .filed {
+  margin-bottom: 5px;
+  background-color: #00243f;
+  border: none;
+  border-bottom: solid 3px #a3acb1;
+  border-radius: 0px;
+  transition: all 0.5s;
+  color: #fff;
+  font-size: 30px;
+  padding-bottom: 2px;
+  padding-right: 5px;
+}
+.profile .filed:focus {
+  box-shadow: none;
+  border-bottom-color: #fcb700;
+}
+.profile .filed.invalid {
+  box-shadow: none;
+  border-bottom-color: rgb(170, 0, 0);
+}
+.profile .kind-feild {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0px;
+  width: 100%;
+}
+.profile .kind-feild .btn-group {
+  width: 80%;
+}
+.profile .kind-feild .btn-group .btn-outline-primary {
+  border-color: #fcb700 !important;
+  color: #fcb700 !important;
+}
+.profile .kind-feild .btn-group .btn-outline-primary:hover {
+  color: #00243f !important;
+  font-weight: bold;
+  background-color: #fcb700 !important;
 }
 
 .sidebar {

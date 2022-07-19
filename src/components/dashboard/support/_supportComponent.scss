@@ -68,6 +68,10 @@
   .help-center {
     position: relative;
     overflow: scroll;
+    .help-cards{
+        margin-left: 7.8%;
+        max-width: 92.5% !important;
+    }
     &::-webkit-scrollbar {
       width: 0.2vw;
       height: 0;
@@ -81,19 +85,116 @@
       background-color: transparent;
     }
     .over-lay {
-      position: absolute;
-      z-index: 99;
-      //   min-height: 100%;
-      height: 1000%;
-      overflow: scroll;
+        backdrop-filter: blur(5px);
+      //   filter: drop-shadow(#3c5b74 0px 1px 2px);
+        position: absolute;
+        z-index: 99;
+        height: 1000%;
+        width: 105%;
+        transition: all 1000ms;
+        background-color: #3c5b7479;
       &::-webkit-scrollbar {
         width: 0;
         height: 0;
       }
-      width: calc(100%);
-      transition: all 1000ms;
-      background-color: #3c5b74be;
     }
+    .nav-link {
+      color: white !important;
+      &.active {
+        // color: $yellow !important;
+        border: 1px solid $light_blue;
+        border-bottom: 1px solid $dark_blue !important;
+        background-color: $dark_blue;
+      }
+    }
+    .the-main-card{
+        height: 100%;
+        .the-main-card-header {
+          background-color: $gray;
+        }
+        .the-main-card-body {
+          background-color: $dark_blue;
+        }
+        .help-card {
+          border-radius: 0 20px 20px 0;
+          // color:;
+          .img-box {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+            flex-direction: column;
+          }
+          .filed {
+            margin-top: 5px;
+            margin-bottom: 5px;
+            background-color: $white;
+            border: none;
+            border-bottom: solid 3px $gray;
+            border-radius: 0px;
+            transition: all 0.5s;
+            &:focus {
+              box-shadow: none;
+              border-bottom-color: $dark_blue;
+            }
+            &.invalid {
+              box-shadow: none;
+              border-bottom-color: rgb(170, 0, 0);
+            }
+          }
+          .div-icon {
+            margin-top: 5px;
+            display: flex;
+            justify-content: center;
+            .one-icon {
+              margin-top: 5px;
+              width: 100%;
+              border: none;
+              border-radius: 50px;
+              padding: 8px;
+              font-size: 15px;
+              font-family: $normal_font;
+              background-color: $dark_blue;
+              color: $white;
+              text-transform: uppercase;
+              transition: all 0.1s;
+              &[disabled] {
+                background-color: $gray !important;
+              }
+            }
+          }
+        }
+    }
+  }
+  .report-center {
+    position: relative;
+    overflow: scroll;
+    height: 100%;
+    width: calc((100% - 57.3%) - 0.1%);
+    transition: all 1000ms;
+    background-color: #3c5b74be;
+    &.active {
+      width: calc((100% - 42.3%) - 0.1%);
+      background-color: transparent;
+    }
+    &::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+    .over-lay {
+      backdrop-filter: blur(5px);
+    //   filter: drop-shadow(#3c5b74 0px 1px 2px);
+      position: absolute;
+      z-index: 99;
+      height: 1000%;
+      width: 100%;
+      transition: all 1000ms;
+      background-color: #3c5b7479;
+    }
+  }
+  .report-cards {
+      height: 100%;
     .nav-link {
       color: white !important;
       &.active {
@@ -109,79 +210,51 @@
     .the-main-card-body {
       background-color: $dark_blue;
     }
-    .help-card {
-      border-radius: 0 20px 20px 0;
-      // color:;
-      .img-box{
-          height: 100%;
+    .report-card {
+      border: none;
+      border: 1px solid $white;
+      //   border-radius: 5px;
+      .header-card {
+        border: none;
+        border-bottom: 1px solid $yellow;
+        background-color: $ink_blue;
+        color: white;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-direction: row;
+        flex-wrap: wrap;
+        .user-info {
           display: flex;
           justify-content: center;
           align-items: center;
-          align-content: center;
-          flex-direction: column;
-      }
-      .filed {
-        margin-top: 5px;
-        margin-bottom: 5px;
-        background-color: $white;
-        border: none;
-        border-bottom: solid 3px $gray;
-        border-radius: 0px;
-        transition: all 0.5s;
-        &:focus {
-          box-shadow: none;
-          border-bottom-color: $dark_blue;
+          flex-direction: row;
+          flex-wrap: nowrap;
         }
-        &.invalid {
-          box-shadow: none;
-          border-bottom-color: rgb(170, 0, 0);
-        }
-      }
-      .div-icon {
-        margin-top: 5px;
-        display: flex;
-        justify-content: center;
-        .one-icon {
-          margin-top: 5px;
-          width: 100%;
-          border: none;
-          border-radius: 50px;
-          padding: 8px;
-          font-size: 15px;
-          font-family: $normal_font;
-          background-color: $dark_blue;
-          color: $white;
-          text-transform: uppercase;
-          transition: all 0.1s;
-          &[disabled] {
-            background-color: $gray !important;
+        .img-model {
+          width: 40px;
+          height: 40px;
+          cursor: pointer;
+          border-radius: 50%;
+          // border: 1px solid black;
+          margin: 5px;
+          overflow: hidden;
+          transition: all 200ms;
+          &:hover {
+            transform: translateY(-5px);
+          }
+          img {
+            width: 100%;
+            height: 100%;
           }
         }
       }
-    }
-  }
-  .report-center {
-    position: relative;
-    overflow: scroll;
-    &::-webkit-scrollbar {
-      width: 0;
-      height: 0;
-    }
-    height: 100%;
-    width: calc((100% - 57.3%) - 0.1%);
-    transition: all 1000ms;
-    background-color: #3c5b74be;
-    &.active {
-      width: calc((100% - 42.3%) - 0.1%);
-      background-color: transparent;
-    }
-    .over-lay {
-      position: absolute;
-      z-index: 99;
-      height: 100%;
-      width: 100%;
-      transition: all 1000ms;
-      background-color: #3c5b74be;
+      .footer-card {
+        border: none;
+        border-top: 1px solid $yellow;
+        background-color: $ink_blue;
+        color: white;
+      }
     }
   }
 }

@@ -1,0 +1,188 @@
+@use "../../shared/colors&fonts" as *;
+.profile {
+  height: 100vh;
+  .cover-box {
+    z-index: 0;
+    object-fit: cover;
+    width: 100%;
+    height: 50vh;
+    position: fixed;
+    .cover {
+      z-index: 0;
+      width: 100%;
+      height: 50vh;
+      position: fixed;
+      object-fit: cover;
+      object-position: top;
+    }
+    .cover-over-lay {
+      position: fixed;
+      z-index: 1;
+      width: 100%;
+      height: 50vh;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+  }
+  .header-info {
+    margin-left: 5%;
+    width: 95%;
+    height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 350px;
+    z-index: 2;
+    .img-box {
+      display: block;
+      position: fixed;
+      top: 5%;
+      max-width: 200px;
+      max-height: 200px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid $yellow;
+      img {
+        width: 100%;
+      }
+    }
+    .edit-icon {
+      cursor: pointer;
+      &:hover {
+        svg {
+          stroke: $dark_blue !important;
+        }
+        path {
+          stroke: $dark_blue !important;
+        }
+      }
+    }
+    .profile-name {
+      top: 31%;
+      position: fixed;
+      font-family: $title_font;
+      color: $white;
+      text-align: center;
+      //   font-size: 50px;
+    }
+  }
+  .scroll-box {
+    margin-top: auto;
+    width: 95%;
+    height: 59vh;
+    position: relative;
+    z-index: 5;
+    background-color: transparent;
+    overflow: scroll;
+    display: flex;
+    &::-webkit-scrollbar {
+      width: 0vw;
+      height: 0;
+    }
+    .personal-info-profile,
+    .financial-info-profile,
+    .property-info-profile,
+    .settings-info-profile {
+      width: 70%;
+      min-height: 50%;
+      border-radius: 10px;
+      background-color: $dark_blue;
+      margin-bottom: 30px;
+    }
+    .personal-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 30%;
+      width: 100%;
+      color: white;
+      text-align: center;
+      font-family: $normal_font;
+      font-weight: 800;
+      letter-spacing: 1px;
+      font-size: 30px;
+    }
+    hr {
+      background-color: white;
+      color: white;
+      height: 2px;
+      opacity: 0.8;
+    }
+    .personal-content {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      color: white;
+      font-size: 20px;
+      height: 55%;
+      overflow: scroll;
+      font-family: $normal_font;
+      margin-left: 18%;
+      .icon {
+        color: $yellow;
+        font-size: 30px;
+      }
+      p {
+        display: inline;
+        margin-left: 10px;
+      }
+      span {
+        color: $yellow;
+      }
+    }
+    .settings-info-profile {
+      margin-bottom: 220px;
+      .settings {
+        @extend .personal-content;
+        .setting-option {
+          cursor: pointer;
+          font-size: 25px;
+          transition: all 500ms;
+          &:hover {
+            color: $yellow;
+          }
+        }
+      }
+    }
+  }
+  .filed {
+    margin-bottom: 5px;
+    background-color: $dark_blue;
+    border: none;
+    border-bottom: solid 3px $gray;
+    border-radius: 0px;
+    transition: all 0.5s;
+    color: $white;
+    font-size: 30px;
+    padding-bottom: 2px;
+    padding-right: 5px;
+    &:focus {
+      box-shadow: none;
+      border-bottom-color: $yellow;
+    }
+    &.invalid {
+      box-shadow: none;
+      border-bottom-color: rgb(170, 0, 0);
+    }
+  }
+  .kind-feild {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0px;
+    width: 100%;
+    .btn-group {
+      width: 80%;
+
+      .btn-outline-primary {
+        border-color: $yellow !important;
+        color: $yellow !important;
+        //   min-width: 50px;
+        &:hover {
+          color: $dark_blue !important;
+          font-weight: bold;
+          background-color: $yellow !important;
+        }
+      }
+    }
+  }
+}

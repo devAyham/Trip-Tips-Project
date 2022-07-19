@@ -8,7 +8,6 @@ import AuthContext from "../../context/AuthProvider";
 import ReCAPTCHA from "../reCAPTCHA/reCAPTCHAComponent";
 
 let HelpCenter = () => {
-  const navigate = useNavigate();
   const [errMsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
   const { auth, setAuth } = useContext(AuthContext);
